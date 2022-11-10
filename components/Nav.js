@@ -23,13 +23,10 @@ const Nav = () => {
 		<div className="flex justify-between items-center">
 			<Link href="/">
 				<div className="flex justify-between items-center gap-2">
-					<Image
+					<img
 						className="w-28 md:w-[148px]"
-						src={'/assets/ghosty-logo-black.png'}
-						width={148}
-						height={148}
+						src={'/assets/logo/ghosty-logo-black.png'}
 						alt="ghosty-logo"
-						style={{ width: 'auto', height: 'auto' }}
 					/>
 				</div>
 			</Link>
