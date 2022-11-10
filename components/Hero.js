@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import clsx from 'clsx'
 import { generateFromString } from 'generate-avatar'
 
@@ -21,12 +20,7 @@ const Hero = () => {
 				</div>
 				<div className="lg:absolute -bottom-20 lg:left-1/2 lg:transform lg:-translate-x-1/2 lg:-ml-20 mb-10 lg:mb-0">
 					<div className="lg:w-[500px]">
-						<Image
-							src={'/assets/peeps.png'}
-							width={640}
-							height={640}
-							alt="hero"
-						/>
+						<img src={'/assets/peeps.png'} alt="hero" />
 					</div>
 				</div>
 			</div>
@@ -71,19 +65,17 @@ const ChatBubble = ({ accountId, date, message }) => {
 		>
 			<div
 				className={clsx(
-					'flex flex-col justify-end',
+					'flex flex-col justify-end w-6 h-6',
 					accountId === 'You' && 'order-2'
 				)}
 			>
-				<Image
+				<img
 					className={clsx(accountId !== 'Ghosty' && 'rounded-full')}
 					src={
 						accountId === 'Ghosty'
-							? '/assets/ghosty-icon-black.png'
+							? '/assets/icon/ghosty-icon-black.png'
 							: `data:image/svg+xml;utf8,${generateFromString(accountId)}`
 					}
-					width={25}
-					height={25}
 					alt="user"
 				/>
 			</div>

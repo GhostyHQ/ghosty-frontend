@@ -12,6 +12,7 @@ const Nav = () => {
 						width={148}
 						height={148}
 						alt="ghosty-logo"
+						style={{ width: 'auto', height: 'auto' }}
 					/>
 				</div>
 			</Link>

@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import Image from 'next/image'
 
 import Nav from '../components/Nav'
 import Hero from '../components/Hero'
@@ -39,7 +38,7 @@ const Home = () => {
 					</p>
 				</div>
 				<div className="flex justify-center mt-10 lg:mt-0 mx-4 lg:mx-0">
-					<Image
+					<img
 						src={'/assets/ghosty-near-hero.png'}
 						width={400}
 						height={400}
