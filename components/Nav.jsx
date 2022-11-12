@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 
 import near from '../lib/near'
 import { prettyTruncate } from '../utils/common'

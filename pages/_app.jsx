@@ -1,8 +1,10 @@
 import axios from 'axios'
-import { useEffect } from 'react'
+import { Fragment, useEffect } from 'react'
+import { ChakraProvider } from '@chakra-ui/react'
 
 import useStore from '../lib/store'
 import near from '../lib/near'
+import theme from '../config/theme'
 
 import '../styles/globals.css'
 
@@ -54,7 +56,13 @@ function MyApp({ Component, pageProps }) {
 		store.setInitialized(true)
 	}
 
-	return <Component {...pageProps} />
+	return (
+		<Fragment>
+			<ChakraProvider theme={theme}>
+				<Component {...pageProps} />
+			</ChakraProvider>
+		</Fragment>
+	)
 }
 
 export default MyApp
