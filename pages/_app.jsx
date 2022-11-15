@@ -39,12 +39,12 @@ function MyApp({ Component, pageProps }) {
 							authorization: await near.authToken(),
 						},
 					})
-					store.setUserProfile(resp.data)
+					store.setUserProfile(resp.data.data)
 				} catch (err) {
 					store.setUserProfile({})
 				}
 			} else {
-				const userProfile = user[0]
+				const userProfile = user
 				store.setUserProfile(userProfile)
 			}
 

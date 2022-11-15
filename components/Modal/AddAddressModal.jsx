@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import {
 	Button,
 	Input,
@@ -10,18 +11,19 @@ import {
 	ModalOverlay,
 } from '@chakra-ui/react'
 import axios from 'axios'
-import { useEffect, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
+
 import getConfig from '../../config/near'
 import { API_URL } from '../../constants/apiUrl'
 import near from '../../lib/near'
-
 import { IconChat } from '../Icon'
 
-const AddAddressModal = ({ isOpen, onClose, currentUser }) => {
+const AddAddressModal = ({ isOpen, onClose, currentUser, mutate }) => {
 	const [nearAccount, setNearAccount] = useState('')
 	const [isDisable, setIsDisable] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
+
+	// const { mutate } = useSWRConfig()
 
 	useEffect(() => {
 		setNearAccount('')
@@ -87,7 +89,7 @@ const AddAddressModal = ({ isOpen, onClose, currentUser }) => {
 						},
 					})
 					.then(() => {
-						toast.success(`successfully added ${nearAccount} to chat list`)
+						mutate(`/api/profile`, true)
 						onClose()
 						setIsLoading(false)
 						setIsDisable(false)
@@ -106,8 +108,8 @@ const AddAddressModal = ({ isOpen, onClose, currentUser }) => {
 
 	return (
 		<>
-			<Toaster position="top-center" reverseOrder={true} />
 			<Modal isOpen={isOpen} onClose={onClose}>
+				<Toaster position="top-center" reverseOrder={true} />
 				<ModalOverlay />
 				<ModalContent>
 					<ModalHeader className="text-center">

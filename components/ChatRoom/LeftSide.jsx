@@ -8,7 +8,6 @@ import {
 	useDisclosure,
 } from '@chakra-ui/react'
 import clsx from 'clsx'
-import { generateFromString } from 'generate-avatar'
 
 import near from '../../lib/near'
 import { prettyTruncate } from '../../utils/common'
@@ -22,10 +21,35 @@ import {
 	IconSearch,
 } from '../Icon'
 import AddAddressModal from '../Modal/AddAddressModal'
+import axios from 'axios'
+import useStore from '../../lib/store'
+import { API_URL } from '../../constants/apiUrl'
+import useSWR from 'swr'
+import ChatList from '../ChatList'
 
 const LeftSide = ({ className }) => {
+	const userProfile = useStore((state) => state.userProfile)
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const { currentUser, wallet } = near
+
+	const fetchProfile = async () => {
+		const res = await axios.get(`${API_URL}/api/profile`, {
+			params: {
+				accountId: userProfile.accountId,
+			},
+		})
+		return (await res.data.data) || null
+	}
+
+	const { data, isValidating, mutate } = useSWR(
+		userProfile?.accountId,
+		fetchProfile,
+		{
+			revalidateOnFocus: true,
+			revalidateIfStale: true,
+			revalidateOnReconnect: true,
+		}
+	)
 
 	const _signOut = () => {
 		wallet.signOut()
@@ -102,42 +126,29 @@ const LeftSide = ({ className }) => {
 					</div>
 				</div>
 				<div className="overflow-y-scroll h-[100vh] pt-32">
-					{Array(20)
-						.fill()
-						.map((_, idx) => (
-							<div
-								key={idx}
-								className="p-4 cursor-pointer hover:bg-primary-light-grey-200 transition duration-200"
-							>
-								<div className="flex items-center gap-2">
-									<div className="relative">
-										<img
-											className="relative w-10 rounded-full"
-											src={`data:image/svg+xml;utf8,${generateFromString(
-												'f1b05051d8564cad77ca947d1b38a0c1031f27b0f13bd641ccd214f62ecf3f1d'
-											)}`}
-										/>
-										<div className="absolute inset-y-7 right-0 w-3 h-3 rounded-full bg-green-500" />
-									</div>
-									<div>
-										<p className="font-semibold">
-											{prettyTruncate(
-												'f1b05051d8564cad77ca947d1b38a0c1031f27b0f13bd641ccd214f62ecf3f1d',
-												20,
-												'address'
-											)}
-										</p>
-										<p className="text-xs">{'New Chat 👻'}</p>
-									</div>
-								</div>
-							</div>
-						))}
+					{data?.chatList?.length === 0 ? (
+						<div className="text-center">
+							<img
+								className="mx-auto"
+								src="/assets/icon-person.png"
+								width={150}
+							/>
+							<p className="text-xl font-semibold">Your chat is empty!</p>
+							<p>
+								Once you start a new conversation, you{`'`}ll see the address
+								lists here.
+							</p>
+						</div>
+					) : (
+						<ChatList isValidating={isValidating} data={data} />
+					)}
 				</div>
 			</div>
 			<AddAddressModal
 				isOpen={isOpen}
 				onClose={onClose}
 				currentUser={currentUser?.accountId}
+				mutate={mutate}
 			/>
 		</>
 	)
