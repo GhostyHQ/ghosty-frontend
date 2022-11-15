@@ -18,6 +18,7 @@ a {
 
 * {
 	box-sizing: border-box;
+	border-color: #ededed;
 }
 
 /* @media (prefers-color-scheme: dark) {

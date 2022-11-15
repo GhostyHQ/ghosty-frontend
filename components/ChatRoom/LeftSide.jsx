@@ -134,7 +134,11 @@ const LeftSide = ({ className }) => {
 						))}
 				</div>
 			</div>
-			<AddAddressModal isOpen={isOpen} onClose={onClose} />
+			<AddAddressModal
+				isOpen={isOpen}
+				onClose={onClose}
+				currentUser={currentUser?.accountId}
+			/>
 		</>
 	)
 }

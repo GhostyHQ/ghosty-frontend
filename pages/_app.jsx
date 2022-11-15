@@ -1,10 +1,11 @@
-import axios from 'axios'
 import { Fragment, useEffect } from 'react'
 import { ChakraProvider } from '@chakra-ui/react'
+import axios from 'axios'
 
 import useStore from '../lib/store'
 import near from '../lib/near'
 import theme from '../config/theme'
+import { API_URL } from '../constants/apiUrl'
 
 import '../styles/globals.css'
 
@@ -20,29 +21,26 @@ function MyApp({ Component, pageProps }) {
 		const currentUser = await near.currentUser
 
 		if (currentUser) {
-			const res = await axios.get(
-				`${process.env.API_URL}/profiles?accountId=${currentUser.accountId}`
-			)
-			const user = res.data.data.results
+			const res = await axios.get(`${API_URL}/api/profile`, {
+				params: {
+					accountId: currentUser.accountId,
+				},
+			})
+			const user = res.data.data
 
 			if (user.length === 0) {
 				const formData = new FormData()
 				formData.append('accountId', currentUser.accountId)
 
 				try {
-					const res = await axios.put(
-						`${process.env.API_URL}/profiles`,
-						formData,
-						{
-							headers: {
-								'Content-Type': 'multipart/form-data',
-								authorization: await near.authToken(),
-							},
-						}
-					)
-					store.setUserProfile(res.data.data)
+					const resp = await axios.put(`${API_URL}/api/profiles`, formData, {
+						headers: {
+							'Content-Type': 'application/json',
+							authorization: await near.authToken(),
+						},
+					})
+					store.setUserProfile(resp.data)
 				} catch (err) {
-					console.log(err)
 					store.setUserProfile({})
 				}
 			} else {
