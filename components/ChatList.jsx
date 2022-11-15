@@ -1,8 +1,27 @@
 import { Spinner } from '@chakra-ui/react'
+import clsx from 'clsx'
 import { generateFromString } from 'generate-avatar'
+import { useEffect } from 'react'
+import useStore from '../lib/store'
 import { prettyTruncate } from '../utils/common'
 
 const ChatList = ({ isValidating, data }) => {
+	const store = useStore()
+
+	useEffect(() => {
+		if (localStorage['currChat']) {
+			const localCurrChat = JSON.parse(localStorage.getItem('currChat'))
+			if (localCurrChat) {
+				store.setCurrentChat(localCurrChat)
+			}
+		}
+	}, [])
+
+	const updateCurrChat = (data) => {
+		localStorage.setItem('currChat', JSON.stringify(data))
+		store.setCurrentChat(data)
+	}
+
 	if (isValidating) {
 		return (
 			<div className="flex justify-center mt-20">
@@ -15,7 +34,12 @@ const ChatList = ({ isValidating, data }) => {
 			{data?.chatList?.map((user, idx) => (
 				<div
 					key={idx}
-					className="p-4 cursor-pointer hover:bg-primary-light-grey-200 transition duration-200"
+					className={clsx(
+						'p-4 cursor-pointer hover:bg-primary-light-grey-200 transition duration-200',
+						store.currentChat.accountId === user.accountId &&
+							'bg-primary-light-grey-200'
+					)}
+					onClick={() => updateCurrChat(user)}
 				>
 					<div className="flex items-center gap-2">
 						<div className="relative">

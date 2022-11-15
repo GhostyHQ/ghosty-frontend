@@ -41,15 +41,7 @@ const LeftSide = ({ className }) => {
 		return (await res.data.data) || null
 	}
 
-	const { data, isValidating, mutate } = useSWR(
-		userProfile?.accountId,
-		fetchProfile,
-		{
-			revalidateOnFocus: true,
-			revalidateIfStale: true,
-			revalidateOnReconnect: true,
-		}
-	)
+	const { data, isValidating } = useSWR(userProfile.accountId, fetchProfile)
 
 	const _signOut = () => {
 		wallet.signOut()
@@ -148,7 +140,6 @@ const LeftSide = ({ className }) => {
 				isOpen={isOpen}
 				onClose={onClose}
 				currentUser={currentUser?.accountId}
-				mutate={mutate}
 			/>
 		</>
 	)

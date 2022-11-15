@@ -17,13 +17,16 @@ import getConfig from '../../config/near'
 import { API_URL } from '../../constants/apiUrl'
 import near from '../../lib/near'
 import { IconChat } from '../Icon'
+import { useSWRConfig } from 'swr'
+import useStore from '../../lib/store'
 
-const AddAddressModal = ({ isOpen, onClose, currentUser, mutate }) => {
+const AddAddressModal = ({ isOpen, onClose, currentUser }) => {
 	const [nearAccount, setNearAccount] = useState('')
 	const [isDisable, setIsDisable] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
 
-	// const { mutate } = useSWRConfig()
+	const { mutate } = useSWRConfig()
+	const store = useStore()
 
 	useEffect(() => {
 		setNearAccount('')
@@ -89,7 +92,17 @@ const AddAddressModal = ({ isOpen, onClose, currentUser, mutate }) => {
 						},
 					})
 					.then(() => {
-						mutate(`/api/profile`, true)
+						mutate(currentUser, true)
+
+						localStorage.setItem(
+							'currChat',
+							JSON.stringify({
+								accountId: nearAccount,
+								alias: '',
+								_id: '',
+							})
+						)
+						store.setCurrentChat({ accountId: nearAccount, alias: '', _id: '' })
 						onClose()
 						setIsLoading(false)
 						setIsDisable(false)
