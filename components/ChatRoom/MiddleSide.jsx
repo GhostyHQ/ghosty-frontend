@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 import { generateFromString } from 'generate-avatar'
+import axios from 'axios'
+import { Button, Spinner, useDisclosure } from '@chakra-ui/react'
+import io from 'socket.io-client'
 
 import ChatHead from '../Chat/ChatHead'
 import ChatFooter from '../Chat/ChatFooter'
 import useStore from '../../lib/store'
 import { IconExclamation, IconLocked, IconPlus } from '../Icon'
-import { Button, Spinner, useDisclosure } from '@chakra-ui/react'
 import Link from 'next/link'
 import AddAddressModal from '../Modal/AddAddressModal'
-import axios from 'axios'
 import { API_URL } from '../../constants/apiUrl'
 import near from '../../lib/near'
 
@@ -28,6 +29,11 @@ const MiddleSide = ({
 	const userProfile = useStore((state) => state.userProfile)
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const scrollRef = useRef()
+	const socket = useRef()
+
+	useEffect(() => {
+		socket.current = io('http://localhost:8000')
+	}, [])
 
 	useEffect(() => {
 		if (scrollRef.current) {
