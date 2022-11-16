@@ -32,6 +32,7 @@ const MiddleSide = ({
 	useEffect(() => {
 		if (scrollRef.current) {
 			scrollRef.current.scrollIntoView({
+				// behavior: 'smooth',
 				block: 'end',
 				inline: 'nearest',
 			})
@@ -197,47 +198,107 @@ const MiddleSide = ({
 								<div ref={scrollRef} key={idx}>
 									{message.senderId !== currentUser ? (
 										// current chat
-										<div
-											className={clsx(
-												'grid grid-flow-col justify-start gap-2 mt-4 ml-4 mr-80',
-												messages.length - 1 === idx && 'pb-24'
+										<>
+											{message.message.image === '' ? (
+												<div
+													className={clsx(
+														'grid grid-flow-col justify-start gap-2 mt-4 ml-4 mr-80',
+														messages.length - 1 === idx && 'pb-24'
+													)}
+												>
+													<div className="flex flex-col justify-end w-6 h-6">
+														<img
+															className="rounded-full"
+															src={`data:image/svg+xml;utf8,${generateFromString(
+																`${message.senderId}`
+															)}`}
+															alt="user"
+														/>
+													</div>
+													<div className="p-3 rounded-xl bg-primary-light-grey bg-opacity-20">
+														<p className="text-sm font-medium text-justify">
+															{message.message.text}
+														</p>
+														<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
+															Sun 12:22 PM
+														</p>
+													</div>
+												</div>
+											) : (
+												<div className="grid grid-flow-col justify-start gap-2 mt-4 ml-4 mr-80">
+													<div className="flex flex-col justify-end w-6 h-6">
+														<img
+															className="rounded-full"
+															src={`data:image/svg+xml;utf8,${generateFromString(
+																`${message.accountId}`
+															)}`}
+															alt="user"
+														/>
+													</div>
+													<div className="p-3 rounded-xl bg-primary-light-grey bg-opacity-20">
+														<a
+															href={`https://paras-cdn.imgix.net/${message.message.image}?width=800`}
+															target="_blank"
+															rel="noreferrer"
+														>
+															<img
+																className="cursor-pointer"
+																src={`https://paras-cdn.imgix.net/${message.message.image}?width=800`}
+																width={400}
+															/>
+															<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
+																Sun 12:22 PM
+															</p>
+														</a>
+													</div>
+												</div>
 											)}
-										>
-											<div className="flex flex-col justify-end w-6 h-6">
-												<img
-													className="rounded-full"
-													src={`data:image/svg+xml;utf8,${generateFromString(
-														`${message.senderId}`
-													)}`}
-													alt="user"
-												/>
-											</div>
-											<div className="p-3 rounded-xl bg-primary-light-grey bg-opacity-20">
-												<p className="text-sm font-medium text-justify">
-													{message.message.text}
-												</p>
-												<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
-													Sun 12:22 PM
-												</p>
-											</div>
-										</div>
+										</>
 									) : (
 										// current user
-										<div
-											className={clsx(
-												'grid grid-flow-col justify-end gap-2 mt-4 mr-4',
-												messages.length - 1 === idx && 'pb-24'
+										<>
+											{message.message.image === '' ? (
+												<div
+													className={clsx(
+														'grid grid-flow-col justify-end gap-2 mt-4 mr-4',
+														messages.length - 1 === idx && 'pb-24'
+													)}
+												>
+													<div className="p-3 rounded-xl bg-primary-blue bg-opacity-20">
+														<p className="text-right text-sm font-medium">
+															{message.message.text}
+														</p>
+														<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
+															Sun 12:22 PM
+														</p>
+													</div>
+												</div>
+											) : (
+												<div
+													className={clsx(
+														'grid grid-flow-col justify-end gap-2 mt-4 ml-80 mr-4',
+														messages.length - 1 === idx && 'pb-24'
+													)}
+												>
+													<div className="p-3 rounded-xl bg-primary-blue bg-opacity-20">
+														<a
+															href={`https://paras-cdn.imgix.net/${message.message.image}?width=800`}
+															target="_blank"
+															rel="noreferrer"
+														>
+															<img
+																className="cursor-pointer"
+																src={`https://paras-cdn.imgix.net/${message.message.image}?width=800`}
+																width={400}
+															/>
+															<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
+																Sun 12:22 PM
+															</p>
+														</a>
+													</div>
+												</div>
 											)}
-										>
-											<div className="p-3 rounded-xl bg-primary-blue bg-opacity-20">
-												<p className="text-right text-sm font-medium">
-													{message.message.text}
-												</p>
-												<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
-													Sun 12:22 PM
-												</p>
-											</div>
-										</div>
+										</>
 									)}
 								</div>
 							))

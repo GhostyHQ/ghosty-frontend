@@ -1,10 +1,14 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 import {
+	Modal,
+	ModalContent,
+	ModalOverlay,
 	Popover,
 	PopoverArrow,
 	PopoverContent,
 	PopoverTrigger,
+	Spinner,
 	useDisclosure,
 } from '@chakra-ui/react'
 import axios from 'axios'
@@ -18,11 +22,59 @@ import near from '../../lib/near'
 const ChatFooter = ({ initEmoji, fetchingMessages }) => {
 	const [message, setMessage] = useState('')
 	const [rowMessage, setRowMessage] = useState(1)
+	const [imgFile, setImgFile] = useState(null)
+	const [isLoadingUpload, setIsLoadingUpload] = useState(false)
 
 	const ref = useRef(null)
 	const { isOpen, onToggle, onClose } = useDisclosure()
 	const currentUser = useStore((state) => state.userProfile)
 	const currentChat = useStore((state) => state.currentChat)
+
+	useEffect(() => {
+		const sendImageMessage = async () => {
+			if (imgFile) {
+				try {
+					const messageData = {
+						senderId: currentUser.accountId,
+						receiverId: currentChat.accountId,
+						image: imgFile,
+					}
+					await axios.post(`${API_URL}/api/send-message`, messageData, {
+						headers: { authorization: await near.authToken() },
+					})
+					setIsLoadingUpload(false)
+					setImgFile(null)
+					fetchingMessages()
+				} catch (error) {
+					console.log(error)
+				}
+			}
+		}
+
+		sendImageMessage()
+	}, [imgFile])
+
+	const sendImage = async (e) => {
+		if (e.target.files.length !== 0) {
+			try {
+				setIsLoadingUpload(true)
+				const formData = new FormData()
+				formData.append('files', e.target.files[0])
+				const res = await axios.post(
+					`https://api-v3-comic-develop.paras.id/upload/single`,
+					formData,
+					{
+						headers: {
+							'Content-Type': 'multipart/form-data',
+						},
+					}
+				)
+				setImgFile(res.data.data)
+			} catch (error) {
+				console.log(error)
+			}
+		}
+	}
 
 	const onEmojiClick = (emojiObject) => {
 		const cursor = ref.current.selectionStart
@@ -37,6 +89,7 @@ const ChatFooter = ({ initEmoji, fetchingMessages }) => {
 			receiverId: currentChat.accountId,
 			message: message,
 		}
+		setMessage('')
 
 		try {
 			await axios.post(`${API_URL}/api/send-message`, messageData, {
@@ -79,9 +132,13 @@ const ChatFooter = ({ initEmoji, fetchingMessages }) => {
 	return (
 		<div className="absolute inset-x-0 bottom-0 bg-white z-50 pt-4 mx-4">
 			<div className="flex items-center gap-1 mb-4">
-				<div className="p-2 cursor-pointer hover:bg-primary-light-grey-200 rounded-full transition duration-200">
+				<label
+					htmlFor="pic"
+					className="p-2 cursor-pointer hover:bg-primary-light-grey-200 rounded-full transition duration-200"
+				>
 					<IconPictureSolid size={30} color="#3F4246" />
-				</div>
+					<input onChange={sendImage} id="pic" type="file" className="hidden" />
+				</label>
 				<Popover placement="top" isOpen={isOpen} onClose={onClose}>
 					<PopoverTrigger>
 						<div
@@ -131,6 +188,15 @@ const ChatFooter = ({ initEmoji, fetchingMessages }) => {
 					<IconSend size={30} color="#3F4246" />
 				</div>
 			</div>
+			<Modal closeOnOverlayClick={false} isOpen={isLoadingUpload} isCentered>
+				<ModalOverlay />
+				<ModalContent bg="transparent" boxShadow="none">
+					<div className="flex justify-center items-center gap-2 bg-transparent">
+						<Spinner color="white" />
+						<p className="text-white">Uploading...</p>
+					</div>
+				</ModalContent>
+			</Modal>
 		</div>
 	)
 }
