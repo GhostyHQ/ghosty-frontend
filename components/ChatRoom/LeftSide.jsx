@@ -26,7 +26,7 @@ import { API_URL } from '../../constants/apiUrl'
 import useSWR from 'swr'
 import ChatList from '../ChatList'
 
-const LeftSide = ({ className, userProfile, currentUser }) => {
+const LeftSide = ({ className, userProfile, currentUser, activeUsers }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const { wallet } = near
 
@@ -130,7 +130,11 @@ const LeftSide = ({ className, userProfile, currentUser }) => {
 							</p>
 						</div>
 					) : (
-						<ChatList isValidating={isValidating} data={data} />
+						<ChatList
+							isValidating={isValidating}
+							data={data}
+							activeUsers={activeUsers}
+						/>
 					)}
 				</div>
 			</div>

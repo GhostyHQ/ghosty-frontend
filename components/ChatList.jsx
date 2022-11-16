@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import useStore from '../lib/store'
 import { prettyTruncate } from '../utils/common'
 
-const ChatList = ({ isValidating, data }) => {
+const ChatList = ({ isValidating, data, activeUsers }) => {
 	const store = useStore()
 
 	useEffect(() => {
@@ -29,6 +29,7 @@ const ChatList = ({ isValidating, data }) => {
 			</div>
 		)
 	}
+
 	return (
 		<>
 			{data?.chatList?.map((user, idx) => (
@@ -49,7 +50,9 @@ const ChatList = ({ isValidating, data }) => {
 									user.accountId
 								)}`}
 							/>
-							<div className="absolute inset-y-7 right-0 w-3 h-3 rounded-full bg-green-500" />
+							{activeUsers?.some((u) => u.currentUser === user.accountId) && (
+								<div className="absolute inset-y-7 right-0 w-3 h-3 rounded-full bg-green-500" />
+							)}
 						</div>
 						<div>
 							<p className="font-semibold">

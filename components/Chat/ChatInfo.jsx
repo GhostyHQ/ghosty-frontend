@@ -12,7 +12,7 @@ import { prettyTruncate } from '../../utils/common'
 import { IconBlocked, IconTag } from '../Icon'
 import useStore from '../../lib/store'
 
-const ChatInfo = () => {
+const ChatInfo = ({ activeUsers }) => {
 	const currChat = useStore((state) => state.currentChat)
 
 	return (
@@ -34,7 +34,9 @@ const ChatInfo = () => {
 					{prettyTruncate(currChat.accountId, 24, 'address')}
 				</a>
 			</p>
-			<p className="text-xs text-center text-green-500">Active Now</p>
+			{activeUsers?.some((u) => u.currentUser === currChat.accountId) && (
+				<p className="text-xs text-center text-green-500">Online</p>
+			)}
 			<Accordion allowToggle className="mt-8">
 				<AccordionItem>
 					<h2>

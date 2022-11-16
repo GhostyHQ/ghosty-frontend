@@ -3,7 +3,6 @@ import clsx from 'clsx'
 import { generateFromString } from 'generate-avatar'
 import axios from 'axios'
 import { Button, Spinner, useDisclosure } from '@chakra-ui/react'
-import io from 'socket.io-client'
 
 import ChatHead from '../Chat/ChatHead'
 import ChatFooter from '../Chat/ChatFooter'
@@ -15,27 +14,29 @@ import { API_URL } from '../../constants/apiUrl'
 import near from '../../lib/near'
 
 const MiddleSide = ({
+	socket,
 	className,
 	initEmoji,
 	currentUser,
+	activeUsers,
 	isToggleAddressInfo = () => {},
 }) => {
 	const [toggleUserInfo, setToggleUserInfo] = useState(true)
 	const [isLoading, setIsLoading] = useState(false)
 	const [progress, setProgress] = useState('')
 	const [messages, setMessages] = useState([])
+	const [socketMessages, setSocketMessages] = useState('')
 
 	const currChatStore = useStore((state) => state.currentChat)
 	const userProfile = useStore((state) => state.userProfile)
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const scrollRef = useRef()
-	const socket = useRef()
 
 	useEffect(() => {
-		socket.current = io('http://localhost:8000')
-	}, [])
+		socket.on('getMessage', (data) => {
+			setSocketMessages(data)
+		})
 
-	useEffect(() => {
 		if (scrollRef.current) {
 			scrollRef.current.scrollIntoView({
 				// behavior: 'smooth',
@@ -44,6 +45,18 @@ const MiddleSide = ({
 			})
 		}
 	}, [messages])
+
+	useEffect(() => {
+		if (socketMessages !== '') {
+			if (
+				socketMessages.senderId === currChatStore.accountId &&
+				socketMessages.receiverId === currentUser
+			) {
+				setMessages([...messages, socketMessages])
+			}
+		}
+		setSocketMessages('')
+	}, [socketMessages])
 
 	useEffect(() => {
 		setIsLoading(true)
@@ -94,6 +107,7 @@ const MiddleSide = ({
 				}
 			)
 			setMessages(res.data.data)
+			setSocketMessages('')
 			setIsLoading(false)
 		} catch (error) {
 			console.log(error)
@@ -194,6 +208,7 @@ const MiddleSide = ({
 			{progress === 'curr-chat' && (
 				<>
 					<ChatHead
+						activeUsers={activeUsers}
 						setToggleUserInfo={() => {
 							setToggleUserInfo(!toggleUserInfo)
 						}}
@@ -231,7 +246,12 @@ const MiddleSide = ({
 													</div>
 												</div>
 											) : (
-												<div className="grid grid-flow-col justify-start gap-2 mt-4 ml-4 mr-80">
+												<div
+													className={clsx(
+														'grid grid-flow-col justify-start gap-2 mt-4 ml-4 mr-80',
+														messages.length - 1 === idx && 'pb-24'
+													)}
+												>
 													<div className="flex flex-col justify-end w-6 h-6">
 														<img
 															className="rounded-full"
@@ -331,6 +351,7 @@ const MiddleSide = ({
 						)}
 					</div>
 					<ChatFooter
+						socket={socket}
 						initEmoji={initEmoji}
 						fetchingMessages={getMessage}
 						messages={messages}

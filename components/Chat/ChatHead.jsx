@@ -4,7 +4,7 @@ import useStore from '../../lib/store'
 import { prettyTruncate } from '../../utils/common'
 import { IconEllipsis } from '../Icon'
 
-const ChatHead = ({ setToggleUserInfo }) => {
+const ChatHead = ({ activeUsers, setToggleUserInfo }) => {
 	const currChat = useStore((state) => state.currentChat)
 
 	return (
@@ -20,7 +20,9 @@ const ChatHead = ({ setToggleUserInfo }) => {
 					<p className="font-semibold">
 						{prettyTruncate(currChat.accountId, 30, 'address')}
 					</p>
-					<p className="text-xs text-green-500">Online</p>
+					{activeUsers.some((u) => u.currentUser === currChat.accountId) && (
+						<p className="text-xs text-green-500">Online</p>
+					)}
 				</div>
 			</div>
 			<div

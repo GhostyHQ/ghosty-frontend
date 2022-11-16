@@ -1,28 +1,44 @@
 import axios from 'axios'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import io from 'socket.io-client'
 
 import ChatInfo from '../../components/Chat/ChatInfo'
 import LeftSide from '../../components/ChatRoom/LeftSide'
 import MiddleSide from '../../components/ChatRoom/MiddleSide'
 import { API_URL } from '../../constants/apiUrl'
 
+// const socket = io.connect('http://localhost:8000')
+
 const Chat = ({ initEmoji, userProfile, currentUser }) => {
 	const [toggleUserInfo, setToggleUserInfo] = useState(true)
+	const [activeUsers, setActiveUsers] = useState()
+	const socket = io('http://localhost:8000')
+
+	useEffect(() => {
+		socket.emit('addUser', currentUser, userProfile)
+
+		socket.on('getUser', (users) => {
+			setActiveUsers(users)
+		})
+	}, [])
 
 	return (
 		<div className="grid grid-cols-5 h-[100vh]">
 			<LeftSide
 				userProfile={userProfile}
 				currentUser={currentUser}
+				activeUsers={activeUsers}
 				className="relative border-r-[1px]"
 			/>
 			<MiddleSide
+				socket={socket}
 				currentUser={currentUser}
+				activeUsers={activeUsers}
 				className="relative col-span-3 border-r-[1px]"
 				initEmoji={initEmoji}
 				isToggleAddressInfo={(e) => setToggleUserInfo(e)}
 			/>
-			{toggleUserInfo && <ChatInfo />}
+			{toggleUserInfo && <ChatInfo activeUsers={activeUsers} />}
 		</div>
 	)
 }

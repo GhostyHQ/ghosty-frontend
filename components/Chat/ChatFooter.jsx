@@ -19,7 +19,7 @@ import useStore from '../../lib/store'
 import { API_URL } from '../../constants/apiUrl'
 import near from '../../lib/near'
 
-const ChatFooter = ({ initEmoji, fetchingMessages }) => {
+const ChatFooter = ({ socket, initEmoji, fetchingMessages }) => {
 	const [message, setMessage] = useState('')
 	const [rowMessage, setRowMessage] = useState(1)
 	const [imgFile, setImgFile] = useState(null)
@@ -39,6 +39,17 @@ const ChatFooter = ({ initEmoji, fetchingMessages }) => {
 						receiverId: currentChat.accountId,
 						image: imgFile,
 					}
+
+					socket.emit('sendMessage', {
+						senderId: currentUser.accountId,
+						receiverId: currentChat.accountId,
+						message: {
+							text: '',
+							image: imgFile,
+						},
+						time: new Date(),
+					})
+
 					await axios.post(`${API_URL}/api/send-message`, messageData, {
 						headers: { authorization: await near.authToken() },
 					})
@@ -89,6 +100,17 @@ const ChatFooter = ({ initEmoji, fetchingMessages }) => {
 			receiverId: currentChat.accountId,
 			message: message,
 		}
+
+		socket.emit('sendMessage', {
+			senderId: currentUser.accountId,
+			receiverId: currentChat.accountId,
+			message: {
+				text: message,
+				image: '',
+			},
+			time: new Date(),
+		})
+
 		setMessage('')
 
 		try {
