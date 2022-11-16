@@ -26,6 +26,7 @@ const MiddleSide = ({
 	const [progress, setProgress] = useState('')
 	const [messages, setMessages] = useState([])
 	const [socketMessages, setSocketMessages] = useState('')
+	const [typingMessage, setTypingMessage] = useState('')
 
 	const currChatStore = useStore((state) => state.currentChat)
 	const userProfile = useStore((state) => state.userProfile)
@@ -35,6 +36,10 @@ const MiddleSide = ({
 	useEffect(() => {
 		socket.on('getMessage', (data) => {
 			setSocketMessages(data)
+		})
+
+		socket.on('getTypingMessage', (data) => {
+			setTypingMessage(data)
 		})
 
 		if (scrollRef.current) {
@@ -240,7 +245,7 @@ const MiddleSide = ({
 														<p className="text-sm font-medium text-justify">
 															{message.message.text}
 														</p>
-														<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
+														<p className="mt-1 whitespace-nowrap text-right text-xs text-primary-dark-grey text-opacity-80">
 															Sun 12:22 PM
 														</p>
 													</div>
@@ -350,6 +355,22 @@ const MiddleSide = ({
 							</div>
 						)}
 					</div>
+					{typingMessage &&
+						typingMessage.message &&
+						typingMessage.senderId === currChatStore.accountId && (
+							<div className="flex items-center gap-2 z-50 absolute bottom-20 bg-primary-light-grey-200 bg-opacity-40 p-2 rounded-t-lg">
+								<div className="flex flex-col justify-end w-6 h-6">
+									<img
+										className="rounded-full"
+										src={`data:image/svg+xml;utf8,${generateFromString(
+											`${currChatStore.accountId}`
+										)}`}
+										alt="user"
+									/>
+								</div>
+								<p className="text-primary-dark-grey">typing message...</p>
+							</div>
+						)}
 					<ChatFooter
 						socket={socket}
 						initEmoji={initEmoji}

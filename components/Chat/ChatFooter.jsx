@@ -31,6 +31,14 @@ const ChatFooter = ({ socket, initEmoji, fetchingMessages }) => {
 	const currentChat = useStore((state) => state.currentChat)
 
 	useEffect(() => {
+		socket.emit('typingMessage', {
+			senderId: currentUser.accountId,
+			receiverId: currentChat.accountId,
+			message: message,
+		})
+	}, [message])
+
+	useEffect(() => {
 		const sendImageMessage = async () => {
 			if (imgFile) {
 				try {
