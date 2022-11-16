@@ -22,15 +22,13 @@ import {
 } from '../Icon'
 import AddAddressModal from '../Modal/AddAddressModal'
 import axios from 'axios'
-import useStore from '../../lib/store'
 import { API_URL } from '../../constants/apiUrl'
 import useSWR from 'swr'
 import ChatList from '../ChatList'
 
-const LeftSide = ({ className }) => {
-	const userProfile = useStore((state) => state.userProfile)
+const LeftSide = ({ className, userProfile, currentUser }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure()
-	const { currentUser, wallet } = near
+	const { wallet } = near
 
 	const fetchProfile = async () => {
 		const res = await axios.get(`${API_URL}/api/profile`, {
@@ -60,7 +58,7 @@ const LeftSide = ({ className }) => {
 								</div>
 							</Link>
 							<p className="font-semibold">
-								{prettyTruncate(currentUser?.accountId, 12, 'address')}
+								{prettyTruncate(currentUser, 12, 'address')}
 							</p>
 						</div>
 						<div className="flex items-center gap-1 m-3">
@@ -139,7 +137,7 @@ const LeftSide = ({ className }) => {
 			<AddAddressModal
 				isOpen={isOpen}
 				onClose={onClose}
-				currentUser={currentUser?.accountId}
+				currentUser={currentUser}
 			/>
 		</>
 	)

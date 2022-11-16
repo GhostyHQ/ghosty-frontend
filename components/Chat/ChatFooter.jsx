@@ -15,7 +15,7 @@ import useStore from '../../lib/store'
 import { API_URL } from '../../constants/apiUrl'
 import near from '../../lib/near'
 
-const ChatFooter = ({ initEmoji }) => {
+const ChatFooter = ({ initEmoji, fetchingMessages }) => {
 	const [message, setMessage] = useState('')
 	const [rowMessage, setRowMessage] = useState(1)
 
@@ -42,6 +42,7 @@ const ChatFooter = ({ initEmoji }) => {
 			await axios.post(`${API_URL}/api/send-message`, messageData, {
 				headers: { authorization: await near.authToken() },
 			})
+			fetchingMessages()
 		} catch (error) {
 			console.log(error)
 		}
@@ -53,7 +54,7 @@ const ChatFooter = ({ initEmoji }) => {
 	}
 
 	const onKeyPress = (e) => {
-		if (e.keyCode === 13 && message !== '') sendMessage()
+		if (e.keyCode === 13 && !e.shiftKey && message.length > 0) sendMessage()
 		if (e.keyCode === 13 && e.shiftKey && rowMessage <= 4) {
 			e.preventDefault()
 

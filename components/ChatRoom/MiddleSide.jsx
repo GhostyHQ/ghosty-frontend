@@ -1,39 +1,50 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 import { generateFromString } from 'generate-avatar'
 
 import ChatHead from '../Chat/ChatHead'
 import ChatFooter from '../Chat/ChatFooter'
 import useStore from '../../lib/store'
-import { IconExclamation, IconPlus } from '../Icon'
+import { IconExclamation, IconLocked, IconPlus } from '../Icon'
 import { Button, Spinner, useDisclosure } from '@chakra-ui/react'
 import Link from 'next/link'
 import AddAddressModal from '../Modal/AddAddressModal'
 import axios from 'axios'
 import { API_URL } from '../../constants/apiUrl'
+import near from '../../lib/near'
 
 const MiddleSide = ({
 	className,
 	initEmoji,
+	currentUser,
 	isToggleAddressInfo = () => {},
 }) => {
 	const [toggleUserInfo, setToggleUserInfo] = useState(true)
 	const [isLoading, setIsLoading] = useState(false)
 	const [progress, setProgress] = useState('')
+	const [messages, setMessages] = useState([])
 
 	const currChatStore = useStore((state) => state.currentChat)
-	const [currChat, setCurrChat] = useState(currChatStore)
-
 	const userProfile = useStore((state) => state.userProfile)
 	const { isOpen, onOpen, onClose } = useDisclosure()
+	const scrollRef = useRef()
 
 	useEffect(() => {
-		setProgress(true)
+		if (scrollRef.current) {
+			scrollRef.current.scrollIntoView({
+				block: 'end',
+				inline: 'nearest',
+			})
+		}
+	}, [messages])
+
+	useEffect(() => {
+		setIsLoading(true)
 		const fetchChatList = async () => {
 			await axios
 				.get(`${API_URL}/api/profile`, {
 					params: {
-						accountId: userProfile.accountId,
+						accountId: currentUser,
 					},
 				})
 				.then(async (res) => {
@@ -43,8 +54,6 @@ const MiddleSide = ({
 					)
 
 					if (localChatFilter.length !== 0) {
-						localStorage.setItem('currChat', JSON.stringify(chatList[0]))
-						setCurrChat(chatList[0])
 						isToggleAddressInfo(true)
 						setToggleUserInfo(false)
 						setProgress('curr-chat')
@@ -57,14 +66,42 @@ const MiddleSide = ({
 				.catch((err) => {
 					console.log(err)
 				})
-			setIsLoading(false)
 		}
+
 		fetchChatList()
 	}, [userProfile, currChatStore])
 
+	useEffect(() => {
+		getMessage()
+	}, [userProfile, currChatStore])
+
+	const getMessage = async () => {
+		try {
+			const res = await axios.get(
+				`${API_URL}/api/get-message/${currChatStore.accountId}`,
+				{
+					headers: {
+						'Content-Type': 'application/json',
+						authorization: await near.authToken(),
+					},
+				}
+			)
+			setMessages(res.data.data)
+			setIsLoading(false)
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
 	if (isLoading) {
 		return (
-			<div className="h-full bg-primary-light-grey-200 p-40 text-center">
+			<div
+				className={clsx(
+					'h-full w-full p-40 text-center',
+					className,
+					toggleUserInfo && 'col-span-4'
+				)}
+			>
 				<Spinner />
 			</div>
 		)
@@ -154,116 +191,90 @@ const MiddleSide = ({
 							setToggleUserInfo(!toggleUserInfo)
 						}}
 					/>
-					<div className="overflow-y-scroll h-[100vh] pt-20 pb-24">
-						{/* another address */}
-						<div className="grid grid-flow-col justify-start gap-2 mt-4 ml-4 mr-80">
-							<div className="flex flex-col justify-end w-6 h-6">
-								<img
-									className="rounded-full"
-									src={`data:image/svg+xml;utf8,${generateFromString(
-										'f1b05051d8564cad77ca947d1b38a0c1031f27b0f13bd641ccd214f62ecf3f1d'
-									)}`}
-									alt="user"
-								/>
-							</div>
-							<div className="p-3 rounded-xl bg-primary-light-grey bg-opacity-20">
-								<p className="text-sm font-medium text-justify">Hi buddy!</p>
-								<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
-									Sun 12:22 PM
-								</p>
-							</div>
-						</div>
-						<div className="grid grid-flow-col justify-start gap-2 mt-4 ml-4 mr-80">
-							<div className="flex flex-col justify-end w-6 h-6">
-								<img
-									className="rounded-full"
-									src={`data:image/svg+xml;utf8,${generateFromString(
-										'f1b05051d8564cad77ca947d1b38a0c1031f27b0f13bd641ccd214f62ecf3f1d'
-									)}`}
-									alt="user"
-								/>
-							</div>
-							<div className="p-3 rounded-xl bg-primary-light-grey bg-opacity-20">
-								<img src="/assets/peeps.png" width={400} />
-								<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
-									Sun 12:22 PM
-								</p>
-							</div>
-						</div>
-
-						{/* currentUser */}
-						<div className="grid grid-flow-col justify-end gap-2 mt-4 ml-80 mr-4">
-							<div className="p-3 rounded-xl bg-primary-blue bg-opacity-20">
-								<p className="text-sm font-medium text-justify">ya whatsup</p>
-								<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
-									Sun 12:22 PM
-								</p>
-							</div>
-						</div>
-
-						{/* another address */}
-						{Array(4)
-							.fill()
-							.map((_, idx) => (
-								<div
-									key={idx}
-									className="grid grid-flow-col justify-start gap-2 mt-4 ml-4 mr-80"
-								>
-									<div className="flex flex-col justify-end w-6 h-6">
-										<img
-											className="rounded-full"
-											src={`data:image/svg+xml;utf8,${generateFromString(
-												'f1b05051d8564cad77ca947d1b38a0c1031f27b0f13bd641ccd214f62ecf3f1d'
-											)}`}
-											alt="user"
-										/>
-									</div>
-									<div className="p-3 rounded-xl bg-primary-light-grey bg-opacity-20">
-										<p className="text-sm font-medium text-justify">
-											Hi buddy!
-										</p>
-										<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
-											Sun 12:22 PM
+					<div className="overflow-y-scroll h-[100vh] pt-20">
+						{messages.length !== 0 ? (
+							messages.map((message, idx) => (
+								<div ref={scrollRef} key={idx}>
+									{message.senderId !== currentUser ? (
+										// current chat
+										<div
+											className={clsx(
+												'grid grid-flow-col justify-start gap-2 mt-4 ml-4 mr-80',
+												messages.length - 1 === idx && 'pb-24'
+											)}
+										>
+											<div className="flex flex-col justify-end w-6 h-6">
+												<img
+													className="rounded-full"
+													src={`data:image/svg+xml;utf8,${generateFromString(
+														`${message.senderId}`
+													)}`}
+													alt="user"
+												/>
+											</div>
+											<div className="p-3 rounded-xl bg-primary-light-grey bg-opacity-20">
+												<p className="text-sm font-medium text-justify">
+													{message.message.text}
+												</p>
+												<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
+													Sun 12:22 PM
+												</p>
+											</div>
+										</div>
+									) : (
+										// current user
+										<div
+											className={clsx(
+												'grid grid-flow-col justify-end gap-2 mt-4 mr-4',
+												messages.length - 1 === idx && 'pb-24'
+											)}
+										>
+											<div className="p-3 rounded-xl bg-primary-blue bg-opacity-20">
+												<p className="text-right text-sm font-medium">
+													{message.message.text}
+												</p>
+												<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
+													Sun 12:22 PM
+												</p>
+											</div>
+										</div>
+									)}
+								</div>
+							))
+						) : (
+							<div className="mt-10 flex justify-center">
+								<div>
+									<img
+										className="mx-auto"
+										src="/assets/empty-chat.png"
+										width={200}
+									/>
+									<p className="mt-5 text-center">
+										... Your new conversation starts here ...
+									</p>
+									<div className="flex justify-center items-center gap-1 bg-primary-yellow bg-opacity-80 p-1 rounded-lg mt-2">
+										<IconLocked size={14} />
+										<p className="text-xs">
+											Messages to {currChatStore.accountId} are not encrypted
+											until the address has signed in to Ghosty.
 										</p>
 									</div>
 								</div>
-							))}
-
-						{/* currentUser */}
-						{Array(10)
-							.fill()
-							.map((_, idx) => (
-								<div
-									key={idx}
-									className="grid grid-flow-col justify-end gap-2 mt-4 ml-80 mr-4"
-								>
-									<div className="p-3 rounded-xl bg-primary-blue bg-opacity-20">
-										<p className="text-sm font-medium text-justify">
-											ya whatsup
-										</p>
-										<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
-											Sun 12:22 PM
-										</p>
-									</div>
-								</div>
-							))}
-						<div className="grid grid-flow-col justify-end gap-2 mt-4 ml-80 mr-4">
-							<div className="p-3 rounded-xl bg-primary-blue bg-opacity-20">
-								<img src="/assets/indomie.png" width={400} />
-								<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
-									Sun 12:22 PM
-								</p>
 							</div>
-						</div>
+						)}
 					</div>
-					<ChatFooter initEmoji={initEmoji} />
+					<ChatFooter
+						initEmoji={initEmoji}
+						fetchingMessages={getMessage}
+						messages={messages}
+					/>
 				</>
 			)}
 
 			<AddAddressModal
 				isOpen={isOpen}
 				onClose={onClose}
-				currentUser={userProfile?.accountId}
+				currentUser={currentUser}
 			/>
 		</div>
 	)

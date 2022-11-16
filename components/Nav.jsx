@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 import near from '../lib/near'
 import { prettyTruncate } from '../utils/common'
@@ -6,6 +7,7 @@ import { IconLongArrow } from './Icon'
 
 const Nav = () => {
 	const { currentUser } = near
+	const router = useRouter()
 
 	const _signIn = async () => {
 		const appTitle = `Ghosty — A messaging platform for NEAR users to simply and instantly
@@ -16,6 +18,12 @@ const Nav = () => {
 			`${location.protocol}//${location.host}/chat`,
 			`${location.protocol}//${location.host}`
 		)
+	}
+
+	const onToChatRoom = () => {
+		router.push(`/chat/${currentUser.accountId}`, undefined, {
+			shallow: true,
+		})
 	}
 
 	return (
@@ -30,8 +38,11 @@ const Nav = () => {
 				</div>
 			</Link>
 			{currentUser ? (
-				<Link href="/chat">
-					<div className="flex justify-between items-center gap-2 px-2 py-2 md:px-6 md:py-3 my-auto rounded-md font-semibold text-white bg-primary-blue hover:bg-opacity-90 transition duration-300 cursor-pointer">
+				<Link href={`/chat/${currentUser.accountId}`}>
+					<div
+						className="flex justify-between items-center gap-2 px-2 py-2 md:px-6 md:py-3 my-auto rounded-md font-semibold text-white bg-primary-blue hover:bg-opacity-90 transition duration-300 cursor-pointer"
+						onClick={onToChatRoom}
+					>
 						<p>{prettyTruncate(currentUser.accountId, 16, 'address')}</p>
 						<IconLongArrow size={20} color="white" />
 					</div>
