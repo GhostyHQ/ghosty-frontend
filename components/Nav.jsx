@@ -15,7 +15,7 @@ const Nav = () => {
 		near.wallet.requestSignIn(
 			process.env.CONTRACT_NAME,
 			appTitle,
-			`${location.protocol}//${location.host}/chat`,
+			`${location.protocol}//${location.host}/loading`,
 			`${location.protocol}//${location.host}`
 		)
 	}

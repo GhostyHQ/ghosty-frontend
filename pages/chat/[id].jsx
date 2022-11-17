@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import io from 'socket.io-client'
 
@@ -6,13 +7,21 @@ import ChatInfo from '../../components/Chat/ChatInfo'
 import LeftSide from '../../components/ChatRoom/LeftSide'
 import MiddleSide from '../../components/ChatRoom/MiddleSide'
 import { API_URL } from '../../constants/apiUrl'
-
-// const socket = io.connect('http://localhost:8000')
+import near from '../../lib/near'
 
 const Chat = ({ initEmoji, userProfile, currentUser }) => {
 	const [toggleUserInfo, setToggleUserInfo] = useState(true)
 	const [activeUsers, setActiveUsers] = useState()
 	const socket = io('http://localhost:8000')
+	const router = useRouter()
+
+	useEffect(() => {
+		if (near?.currentUser?.accountId !== undefined) {
+			if (near?.currentUser?.accountId !== router.query.id) {
+				router.push('/')
+			}
+		}
+	}, [near?.currentUser?.accountId])
 
 	useEffect(() => {
 		socket.emit('addUser', currentUser, userProfile)
