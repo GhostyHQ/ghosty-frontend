@@ -54,7 +54,7 @@ const MiddleSide = ({
 	useEffect(() => {
 		if (socketMessages !== '') {
 			if (
-				socketMessages.senderId === currChatStore.accountId &&
+				socketMessages.senderId === currChatStore.accountChatList &&
 				socketMessages.receiverId === currentUser
 			) {
 				setMessages([...messages, socketMessages])
@@ -67,15 +67,15 @@ const MiddleSide = ({
 		setIsLoading(true)
 		const fetchChatList = async () => {
 			await axios
-				.get(`${API_URL}/api/profile`, {
+				.get(`${API_URL}/api/profile/chatlist`, {
 					params: {
 						accountId: currentUser,
 					},
 				})
 				.then(async (res) => {
-					const chatList = await res.data.data.chatList
+					const chatList = await res.data.data
 					const localChatFilter = chatList.filter(
-						(user) => user.accountId === currChatStore.accountId
+						(user) => user.accountChatList === currChatStore.accountChatList
 					)
 
 					if (localChatFilter.length !== 0) {
@@ -103,7 +103,7 @@ const MiddleSide = ({
 	const getMessage = async () => {
 		try {
 			const res = await axios.get(
-				`${API_URL}/api/get-message/${currChatStore.accountId}`,
+				`${API_URL}/api/get-message/${currChatStore.accountChatList}`,
 				{
 					headers: {
 						'Content-Type': 'application/json',
@@ -261,7 +261,7 @@ const MiddleSide = ({
 														<img
 															className="rounded-full"
 															src={`data:image/svg+xml;utf8,${generateFromString(
-																`${message.accountId}`
+																`${message.senderId}`
 															)}`}
 															alt="user"
 														/>
@@ -347,8 +347,8 @@ const MiddleSide = ({
 									<div className="flex justify-center items-center gap-1 bg-primary-yellow bg-opacity-80 p-1 rounded-lg mt-2">
 										<IconLocked size={14} />
 										<p className="text-xs">
-											Messages to {currChatStore.accountId} are not encrypted
-											until the address has signed in to Ghosty.
+											Messages to {currChatStore.accountChatList} are not
+											encrypted until the address has signed in to Ghosty.
 										</p>
 									</div>
 								</div>
@@ -357,13 +357,13 @@ const MiddleSide = ({
 					</div>
 					{typingMessage &&
 						typingMessage.message &&
-						typingMessage.senderId === currChatStore.accountId && (
+						typingMessage.senderId === currChatStore.accountChatList && (
 							<div className="flex items-center gap-2 z-50 absolute bottom-20 bg-primary-light-grey-200 bg-opacity-40 p-2 rounded-t-lg">
 								<div className="flex flex-col justify-end w-6 h-6">
 									<img
 										className="rounded-full"
 										src={`data:image/svg+xml;utf8,${generateFromString(
-											`${currChatStore.accountId}`
+											`${currChatStore.accountChatList}`
 										)}`}
 										alt="user"
 									/>
@@ -376,6 +376,7 @@ const MiddleSide = ({
 						initEmoji={initEmoji}
 						fetchingMessages={getMessage}
 						messages={messages}
+						currentUser={currentUser}
 					/>
 				</>
 			)}

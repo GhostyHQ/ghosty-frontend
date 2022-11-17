@@ -19,7 +19,7 @@ import useStore from '../../lib/store'
 import { API_URL } from '../../constants/apiUrl'
 import near from '../../lib/near'
 
-const ChatFooter = ({ socket, initEmoji, fetchingMessages }) => {
+const ChatFooter = ({ socket, initEmoji, fetchingMessages, currentUser }) => {
 	const [message, setMessage] = useState('')
 	const [rowMessage, setRowMessage] = useState(1)
 	const [imgFile, setImgFile] = useState(null)
@@ -27,13 +27,14 @@ const ChatFooter = ({ socket, initEmoji, fetchingMessages }) => {
 
 	const ref = useRef(null)
 	const { isOpen, onToggle, onClose } = useDisclosure()
-	const currentUser = useStore((state) => state.userProfile)
+	// const currentUserStore = useStore((state) => state.userProfile)
 	const currentChat = useStore((state) => state.currentChat)
+	// const currentUser = currentUserStore[0]
 
 	useEffect(() => {
 		socket.emit('typingMessage', {
-			senderId: currentUser.accountId,
-			receiverId: currentChat.accountId,
+			senderId: currentUser,
+			receiverId: currentChat.accountChatList,
 			message: message,
 		})
 	}, [message])
@@ -43,14 +44,14 @@ const ChatFooter = ({ socket, initEmoji, fetchingMessages }) => {
 			if (imgFile) {
 				try {
 					const messageData = {
-						senderId: currentUser.accountId,
-						receiverId: currentChat.accountId,
+						senderId: currentUser,
+						receiverId: currentChat.accountChatList,
 						image: imgFile,
 					}
 
 					socket.emit('sendMessage', {
-						senderId: currentUser.accountId,
-						receiverId: currentChat.accountId,
+						senderId: currentUser,
+						receiverId: currentChat.accountChatList,
 						message: {
 							text: '',
 							image: imgFile,
@@ -104,14 +105,14 @@ const ChatFooter = ({ socket, initEmoji, fetchingMessages }) => {
 
 	const sendMessage = async () => {
 		const messageData = {
-			senderId: currentUser.accountId,
-			receiverId: currentChat.accountId,
+			senderId: currentUser,
+			receiverId: currentChat.accountChatList,
 			message: message,
 		}
 
 		socket.emit('sendMessage', {
-			senderId: currentUser.accountId,
-			receiverId: currentChat.accountId,
+			senderId: currentUser,
+			receiverId: currentChat.accountChatList,
 			message: {
 				text: message,
 				image: '',

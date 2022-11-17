@@ -31,7 +31,7 @@ const LeftSide = ({ className, userProfile, currentUser, activeUsers }) => {
 	const { wallet } = near
 
 	const fetchProfile = async () => {
-		const res = await axios.get(`${API_URL}/api/profile`, {
+		const res = await axios.get(`${API_URL}/api/profile/chatlist`, {
 			params: {
 				accountId: userProfile.accountId,
 			},
@@ -131,6 +131,7 @@ const LeftSide = ({ className, userProfile, currentUser, activeUsers }) => {
 						</div>
 					) : (
 						<ChatList
+							currentUser={currentUser}
 							isValidating={isValidating}
 							data={data}
 							activeUsers={activeUsers}
