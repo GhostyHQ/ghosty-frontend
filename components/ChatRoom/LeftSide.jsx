@@ -37,6 +37,7 @@ const LeftSide = ({
 	setLastMessageCurrentUser,
 }) => {
 	const [searchValue, setSearchValue] = useState('')
+	const [filteredUsers, setFilteredUsers] = useState()
 
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const { wallet } = near
@@ -51,11 +52,14 @@ const LeftSide = ({
 	}
 
 	const { data, isValidating } = useSWR(userProfile.accountId, fetchProfile)
-	const [filteredUsers, setFilteredUsers] = useState(data)
 
 	const handleSearchFilter = (e) => {
 		setSearchValue(e.target.value)
 	}
+
+	useEffect(() => {
+		setFilteredUsers(data)
+	}, [data])
 
 	useEffect(() => {
 		const timeout = setTimeout(() => {
@@ -66,7 +70,7 @@ const LeftSide = ({
 				)
 			})
 			setFilteredUsers(filter)
-		}, 500)
+		}, 100)
 		return () => clearTimeout(timeout)
 	}, [searchValue])
 
