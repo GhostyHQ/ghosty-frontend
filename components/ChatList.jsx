@@ -67,7 +67,9 @@ const ChatList = ({
 	}, [lastMessageChatList])
 
 	const updateCurrChat = (user) => {
-		sendSeenMessage(user)
+		if (user?.lastMessage?.[0]?.receiverId === currentUser) {
+			sendSeenMessage(user)
+		}
 
 		localStorage.setItem('currChat', JSON.stringify(user))
 		store.setCurrentChat(user)
@@ -78,12 +80,16 @@ const ChatList = ({
 			_id: user?.lastMessage?.[0]?._id,
 		}
 
-		await axios.post(`${API_URL}/api/seen-message`, data, {
-			headers: {
-				'Content-Type': 'application/json',
-				authorization: await near.authToken(),
-			},
-		})
+		try {
+			await axios.post(`${API_URL}/api/seen-message`, data, {
+				headers: {
+					'Content-Type': 'application/json',
+					authorization: await near.authToken(),
+				},
+			})
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
 	if (isValidating) {
