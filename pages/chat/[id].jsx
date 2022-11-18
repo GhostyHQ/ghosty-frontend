@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import io from 'socket.io-client'
 
@@ -7,21 +6,15 @@ import ChatInfo from '../../components/Chat/ChatInfo'
 import LeftSide from '../../components/ChatRoom/LeftSide'
 import MiddleSide from '../../components/ChatRoom/MiddleSide'
 import { API_URL } from '../../constants/apiUrl'
-import near from '../../lib/near'
+// import near from '../../lib/near'
 
 const Chat = ({ initEmoji, userProfile, currentUser }) => {
 	const [toggleUserInfo, setToggleUserInfo] = useState(true)
 	const [activeUsers, setActiveUsers] = useState()
-	const socket = io('http://localhost:8000')
-	const router = useRouter()
+	const [lastMessageChatList, setLastMessageChatList] = useState()
+	const [lastMessageCurrentUser, setLastMessageCurrentUser] = useState()
 
-	useEffect(() => {
-		if (near?.currentUser?.accountId !== undefined) {
-			if (near?.currentUser?.accountId !== router.query.id) {
-				router.push('/')
-			}
-		}
-	}, [near?.currentUser?.accountId])
+	const socket = io('http://localhost:8000')
 
 	useEffect(() => {
 		socket.emit('addUser', currentUser, userProfile)
@@ -38,6 +31,8 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 				currentUser={currentUser}
 				activeUsers={activeUsers}
 				className="relative border-r-[1px]"
+				setLastMessageChatList={lastMessageChatList}
+				setLastMessageCurrentUser={lastMessageCurrentUser}
 			/>
 			<MiddleSide
 				socket={socket}
@@ -46,6 +41,8 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 				className="relative col-span-3 border-r-[1px]"
 				initEmoji={initEmoji}
 				isToggleAddressInfo={(e) => setToggleUserInfo(e)}
+				setLastMessageChatList={(e) => setLastMessageChatList(e)}
+				setLastMessageCurrentUser={(e) => setLastMessageCurrentUser(e)}
 			/>
 			{toggleUserInfo && <ChatInfo activeUsers={activeUsers} />}
 		</div>

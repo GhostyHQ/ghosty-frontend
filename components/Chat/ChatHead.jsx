@@ -13,16 +13,16 @@ const ChatHead = ({ activeUsers, setToggleUserInfo }) => {
 				<img
 					className="w-8 rounded-full"
 					src={`data:image/svg+xml;utf8,${generateFromString(
-						`${currChat.accountId}`
+						`${currChat.accountChatList}`
 					)}`}
 				/>
 				<div>
 					<p className="font-semibold">
-						{prettyTruncate(currChat.accountId, 30, 'address')}
+						{prettyTruncate(currChat.accountChatList, 30, 'address')}
 					</p>
-					{activeUsers.some((u) => u.currentUser === currChat.accountId) && (
-						<p className="text-xs text-green-500">Online</p>
-					)}
+					{activeUsers.some(
+						(u) => u.currentUser === currChat.accountChatList
+					) && <p className="text-xs text-green-500">Online</p>}
 				</div>
 			</div>
 			<div

@@ -21,20 +21,20 @@ const ChatInfo = ({ activeUsers }) => {
 				<img
 					className="w-24 rounded-full"
 					src={`data:image/svg+xml;utf8,${generateFromString(
-						`${currChat.accountId}`
+						`${currChat.accountChatList}`
 					)}`}
 				/>
 			</div>
 			<p className="mt-4 text-center font-semibold hover:underline">
 				<a
-					href={`https://testnet.nearblocks.io/address/${currChat.accountId}`}
+					href={`https://testnet.nearblocks.io/address/${currChat.accountChatList}`}
 					target="_blank"
 					rel="noreferrer"
 				>
-					{prettyTruncate(currChat.accountId, 24, 'address')}
+					{prettyTruncate(currChat.accountChatList, 24, 'address')}
 				</a>
 			</p>
-			{activeUsers?.some((u) => u.currentUser === currChat.accountId) && (
+			{activeUsers?.some((u) => u.currentUser === currChat.accountChatList) && (
 				<p className="text-xs text-center text-green-500">Online</p>
 			)}
 			<Accordion allowToggle className="mt-8">

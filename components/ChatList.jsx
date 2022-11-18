@@ -2,13 +2,50 @@ import { Spinner } from '@chakra-ui/react'
 import clsx from 'clsx'
 import { generateFromString } from 'generate-avatar'
 import moment from 'moment'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { useSWRConfig } from 'swr'
 import useStore from '../lib/store'
 import { prettyTruncate } from '../utils/common'
 import { IconCheck } from './Icon'
 
-const ChatList = ({ currentUser, isValidating, data, activeUsers }) => {
+const ChatList = ({
+	currentUser,
+	isValidating,
+	data,
+	activeUsers,
+	lastMessageChatList,
+	lastMessageCurrentUser,
+}) => {
 	const store = useStore()
+	const { mutate } = useSWRConfig()
+
+	const [lastMessage, setLastMessage] = useState([])
+
+	useEffect(() => {
+		const isLastMessage = data?.some((user) => {
+			return (
+				(lastMessageCurrentUser?.senderId === currentUser &&
+					lastMessageCurrentUser?.receiverId === user.accountChatList) ||
+				(lastMessageCurrentUser?.receiverId === currentUser &&
+					lastMessageCurrentUser?.senderId === user.accountChatList)
+			)
+		})
+		if (isLastMessage) setLastMessage(lastMessageCurrentUser)
+		mutate(currentUser, true)
+	}, [lastMessageCurrentUser])
+
+	useEffect(() => {
+		const isLastMessage = data?.some((user) => {
+			return (
+				(lastMessageChatList?.senderId === currentUser &&
+					lastMessageChatList?.receiverId === user.accountChatList) ||
+				(lastMessageChatList?.receiverId === currentUser &&
+					lastMessageChatList?.senderId === user.accountChatList)
+			)
+		})
+		if (isLastMessage) setLastMessage(lastMessageChatList)
+		mutate(currentUser, true)
+	}, [lastMessageChatList])
 
 	useEffect(() => {
 		if (localStorage['currChat']) {
@@ -45,7 +82,7 @@ const ChatList = ({ currentUser, isValidating, data, activeUsers }) => {
 					onClick={() => updateCurrChat(user)}
 				>
 					<div className="flex items-start gap-2">
-						<div className="flex-shrink-0 w-12">
+						<div className="relative flex-shrink-0 w-12">
 							<img
 								className="relative rounded-full"
 								src={`data:image/svg+xml;utf8,${generateFromString(
@@ -55,7 +92,7 @@ const ChatList = ({ currentUser, isValidating, data, activeUsers }) => {
 							{activeUsers?.some(
 								(u) => u.currentUser === user.accountChatList
 							) && (
-								<div className="absolute inset-y-7 right-0 w-3 h-3 rounded-full bg-green-500" />
+								<div className="absolute inset-y-7 right-0 w-4 h-4 rounded-full bg-green-500" />
 							)}
 						</div>
 						<div className="text-sm w-full">
@@ -64,35 +101,64 @@ const ChatList = ({ currentUser, isValidating, data, activeUsers }) => {
 									{prettyTruncate(user.accountChatList, 12, 'address')}
 								</p>
 								<p className="text-xs">
-									{user.lastMessage &&
-										moment(user.lastMessage.createdAt)
+									{user.lastMessage[0] &&
+										moment(user.lastMessage[0].createdAt)
 											.startOf('minute')
 											.fromNow()}
 								</p>
 							</div>
 							<div className="flex justify-between items-center gap-2 whitespace-nowrap">
 								<div>
-									{user.lastMessage && user.lastMessage.message.text ? (
+									{user.lastMessage[0] && user.lastMessage[0].message?.text ? (
 										<span>
-											{prettyTruncate(user.lastMessage.message.text, 22)}
+											{(lastMessageChatList?.senderId === currentUser &&
+												lastMessageChatList?.receiverId ===
+													user.accountChatList) ||
+											(lastMessageChatList?.receiverId === currentUser &&
+												lastMessageChatList?.senderId ===
+													user.accountChatList) ||
+											(lastMessageCurrentUser?.senderId === currentUser &&
+												lastMessageCurrentUser?.receiverId ===
+													user.accountChatList) ||
+											(lastMessageCurrentUser?.receiverId === currentUser &&
+												lastMessageCurrentUser?.senderId ===
+													user.accountChatList)
+												? prettyTruncate(lastMessage?.message?.text, 22)
+												: prettyTruncate(user.lastMessage[0].message.text, 22)}
 										</span>
-									) : user.lastMessage && user.lastMessage.message.image ? (
+									) : user.lastMessage[0] &&
+									  user.lastMessage[0].message?.image ? (
 										<span>Send a image</span>
 									) : (
 										<span>New Chat 👻</span>
 									)}
 								</div>
 								<div>
-									{user.lastMessage &&
-										user.lastMessage.senderId === currentUser && (
-											<span>
-												{user.lastMessage.status === 'unseen' ? (
-													<IconCheck size={16} />
-												) : (
-													<IconCheck size={16} color="green" />
-												)}
-											</span>
-										)}
+									{lastMessage.senderId === currentUser &&
+									lastMessage.receiverId === user.accountChatList ? (
+										<span>
+											{user?.lastMessage[0]?.status === 'unseen' ? (
+												<IconCheck size={16} />
+											) : (
+												<IconCheck size={16} color="green" />
+											)}
+										</span>
+									) : lastMessage.senderId === user.accountChatList &&
+									  lastMessage.receiverId === currentUser ? (
+										<span>
+											{user?.lastMessage[0]?.status === 'unseen' && (
+												<div className="w-2.5 h-2.5 rounded-full bg-primary-blue"></div>
+											)}
+										</span>
+									) : (
+										<span>
+											{user?.lastMessage[0]?.status === 'unseen' ? (
+												<IconCheck size={16} />
+											) : (
+												<IconCheck size={16} color="green" />
+											)}
+										</span>
+									)}
 								</div>
 							</div>
 						</div>

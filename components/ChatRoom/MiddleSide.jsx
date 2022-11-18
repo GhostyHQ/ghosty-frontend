@@ -12,6 +12,7 @@ import Link from 'next/link'
 import AddAddressModal from '../Modal/AddAddressModal'
 import { API_URL } from '../../constants/apiUrl'
 import near from '../../lib/near'
+import moment from 'moment'
 
 const MiddleSide = ({
 	socket,
@@ -20,6 +21,8 @@ const MiddleSide = ({
 	currentUser,
 	activeUsers,
 	isToggleAddressInfo = () => {},
+	setLastMessageChatList = () => {},
+	setLastMessageCurrentUser = () => {},
 }) => {
 	const [toggleUserInfo, setToggleUserInfo] = useState(true)
 	const [isLoading, setIsLoading] = useState(false)
@@ -35,7 +38,12 @@ const MiddleSide = ({
 
 	useEffect(() => {
 		socket.on('getMessage', (data) => {
+			setLastMessageChatList(data)
 			setSocketMessages(data)
+		})
+
+		socket.on('getMessageCurrentUser', (data) => {
+			setLastMessageCurrentUser(data)
 		})
 
 		socket.on('getTypingMessage', (data) => {
@@ -246,7 +254,10 @@ const MiddleSide = ({
 															{message.message.text}
 														</p>
 														<p className="mt-1 whitespace-nowrap text-right text-xs text-primary-dark-grey text-opacity-80">
-															Sun 12:22 PM
+															{message.message &&
+																moment(message.createdAt)
+																	.startOf('minute')
+																	.fromNow()}
 														</p>
 													</div>
 												</div>
@@ -278,7 +289,10 @@ const MiddleSide = ({
 																width={400}
 															/>
 															<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
-																Sun 12:22 PM
+																{message.message &&
+																	moment(message.createdAt)
+																		.startOf('minute')
+																		.fromNow()}
 															</p>
 														</a>
 													</div>
@@ -300,7 +314,10 @@ const MiddleSide = ({
 															{message.message.text}
 														</p>
 														<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
-															Sun 12:22 PM
+															{message.message &&
+																moment(message.createdAt)
+																	.startOf('minute')
+																	.fromNow()}
 														</p>
 													</div>
 												</div>
@@ -323,7 +340,10 @@ const MiddleSide = ({
 																width={400}
 															/>
 															<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
-																Sun 12:22 PM
+																{message.message &&
+																	moment(message.createdAt)
+																		.startOf('minute')
+																		.fromNow()}
 															</p>
 														</a>
 													</div>
