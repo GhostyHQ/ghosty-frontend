@@ -6,7 +6,6 @@ import ChatInfo from '../../components/Chat/ChatInfo'
 import LeftSide from '../../components/ChatRoom/LeftSide'
 import MiddleSide from '../../components/ChatRoom/MiddleSide'
 import { API_URL } from '../../constants/apiUrl'
-// import near from '../../lib/near'
 
 const Chat = ({ initEmoji, userProfile, currentUser }) => {
 	const [toggleUserInfo, setToggleUserInfo] = useState(true)

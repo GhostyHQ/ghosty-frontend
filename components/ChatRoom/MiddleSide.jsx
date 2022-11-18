@@ -31,6 +31,8 @@ const MiddleSide = ({
 	const [socketMessages, setSocketMessages] = useState('')
 	const [typingMessage, setTypingMessage] = useState('')
 
+	const store = useStore()
+
 	const currChatStore = useStore((state) => state.currentChat)
 	const userProfile = useStore((state) => state.userProfile)
 	const { isOpen, onOpen, onClose } = useDisclosure()
@@ -120,6 +122,7 @@ const MiddleSide = ({
 				}
 			)
 			setMessages(res.data.data)
+			store.setMessages(res.data.data)
 			setSocketMessages('')
 			setIsLoading(false)
 		} catch (error) {

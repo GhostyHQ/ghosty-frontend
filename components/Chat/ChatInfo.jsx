@@ -14,6 +14,7 @@ import useStore from '../../lib/store'
 
 const ChatInfo = ({ activeUsers }) => {
 	const currChat = useStore((state) => state.currentChat)
+	const messages = useStore((state) => state.messages)
 
 	return (
 		<div>
@@ -66,16 +67,24 @@ const ChatInfo = ({ activeUsers }) => {
 					</h2>
 					<AccordionPanel pb={4}>
 						<div className="grid grid-cols-2 gap-2 overflow-y-scroll h-80">
-							{Array(20)
-								.fill()
-								.map((_, idx) => (
-									<img
-										key={idx}
-										className="p-2 rounded-md cursor-pointer hover:bg-primary-light-grey-200 transition duration-200"
-										src="/assets/indomie.png"
-										width={100}
-									/>
-								))}
+							{messages?.map((msg, idx) => (
+								<>
+									{msg.message.image && (
+										<a
+											href={`https://paras-cdn.imgix.net/${msg.message.image}?width=800`}
+											target="_blank"
+											rel="noreferrer"
+										>
+											<img
+												key={idx}
+												className="p-2 rounded-md cursor-pointer hover:bg-primary-light-grey-200 transition duration-200"
+												src={`https://paras-cdn.imgix.net/${msg.message.image}?width=800`}
+												width={100}
+											/>
+										</a>
+									)}
+								</>
+							))}
 						</div>
 					</AccordionPanel>
 				</AccordionItem>

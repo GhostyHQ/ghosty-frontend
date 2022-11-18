@@ -74,8 +74,6 @@ const LeftSide = ({
 		return () => clearTimeout(timeout)
 	}, [searchValue])
 
-	console.log('filterUser', filteredUsers)
-
 	const _signOut = () => {
 		wallet.signOut()
 		window.location.replace(`${location.protocol}//${location.host}`)
