@@ -22,6 +22,7 @@
 		"framer-motion": "^6",
 		"generate-avatar": "^1.4.10",
 		"js-base64": "^3.7.2",
+		"lodash": "^4.17.21",
 		"moment": "^2.29.4",
 		"near-api-js": "^0.44.2",
 		"next": "13.0.2",

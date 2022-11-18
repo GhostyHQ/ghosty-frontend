@@ -10,6 +10,7 @@ import near from '../lib/near'
 import useStore from '../lib/store'
 import { prettyTruncate } from '../utils/common'
 import { IconCheck } from './Icon'
+import _ from 'lodash'
 
 const ChatList = ({
 	currentUser,
@@ -18,6 +19,7 @@ const ChatList = ({
 	activeUsers,
 	lastMessageChatList,
 	lastMessageCurrentUser,
+	filteredUsers,
 }) => {
 	const [lastMessage, setLastMessage] = useState([])
 	const [lastTime, setLastTime] = useState([])
@@ -102,7 +104,7 @@ const ChatList = ({
 
 	return (
 		<>
-			{data?.map((user, idx) => (
+			{_.map(filteredUsers, (user, idx) => (
 				<div
 					key={idx}
 					className={clsx(

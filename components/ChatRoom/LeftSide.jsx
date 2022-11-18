@@ -25,6 +25,8 @@ import axios from 'axios'
 import { API_URL } from '../../constants/apiUrl'
 import useSWR from 'swr'
 import ChatList from '../ChatList'
+import { useEffect, useState } from 'react'
+import _ from 'lodash'
 
 const LeftSide = ({
 	className,
@@ -34,6 +36,8 @@ const LeftSide = ({
 	setLastMessageChatList,
 	setLastMessageCurrentUser,
 }) => {
+	const [searchValue, setSearchValue] = useState('')
+
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const { wallet } = near
 
@@ -47,6 +51,26 @@ const LeftSide = ({
 	}
 
 	const { data, isValidating } = useSWR(userProfile.accountId, fetchProfile)
+	const [filteredUsers, setFilteredUsers] = useState(data)
+
+	const handleSearchFilter = (e) => {
+		setSearchValue(e.target.value)
+	}
+
+	useEffect(() => {
+		const timeout = setTimeout(() => {
+			const filter = _.filter(data, (user) => {
+				return _.includes(
+					_.lowerCase(JSON.stringify(_.values(user))),
+					_.lowerCase(searchValue)
+				)
+			})
+			setFilteredUsers(filter)
+		}, 500)
+		return () => clearTimeout(timeout)
+	}, [searchValue])
+
+	console.log('filterUser', filteredUsers)
 
 	const _signOut = () => {
 		wallet.signOut()
@@ -118,6 +142,8 @@ const LeftSide = ({
 							type="text"
 							className="w-full focus:outline-none"
 							placeholder="Search address.."
+							value={searchValue}
+							onChange={handleSearchFilter}
 							style={{ WebkitAppearance: 'none' }}
 						/>
 					</div>
@@ -141,6 +167,7 @@ const LeftSide = ({
 							currentUser={currentUser}
 							isValidating={isValidating}
 							data={data}
+							filteredUsers={filteredUsers}
 							activeUsers={activeUsers}
 							lastMessageChatList={setLastMessageChatList}
 							lastMessageCurrentUser={setLastMessageCurrentUser}
