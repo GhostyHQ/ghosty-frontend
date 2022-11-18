@@ -1,9 +1,12 @@
 import { Spinner } from '@chakra-ui/react'
+import axios from 'axios'
 import clsx from 'clsx'
 import { generateFromString } from 'generate-avatar'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { useSWRConfig } from 'swr'
+import { API_URL } from '../constants/apiUrl'
+import near from '../lib/near'
 import useStore from '../lib/store'
 import { prettyTruncate } from '../utils/common'
 import { IconCheck } from './Icon'
@@ -16,10 +19,20 @@ const ChatList = ({
 	lastMessageChatList,
 	lastMessageCurrentUser,
 }) => {
+	const [lastMessage, setLastMessage] = useState([])
+	const [lastTime, setLastTime] = useState([])
+
 	const store = useStore()
 	const { mutate } = useSWRConfig()
 
-	const [lastMessage, setLastMessage] = useState([])
+	useEffect(() => {
+		if (localStorage['currChat']) {
+			const localCurrChat = JSON.parse(localStorage.getItem('currChat'))
+			if (localCurrChat) {
+				store.setCurrentChat(localCurrChat)
+			}
+		}
+	}, [])
 
 	useEffect(() => {
 		const isLastMessage = data?.some((user) => {
@@ -30,7 +43,10 @@ const ChatList = ({
 					lastMessageCurrentUser?.senderId === user.accountChatList)
 			)
 		})
-		if (isLastMessage) setLastMessage(lastMessageCurrentUser)
+		if (isLastMessage) {
+			setLastMessage(lastMessageCurrentUser)
+			setLastTime(lastMessageCurrentUser)
+		}
 		mutate(currentUser, true)
 	}, [lastMessageCurrentUser])
 
@@ -43,22 +59,31 @@ const ChatList = ({
 					lastMessageChatList?.senderId === user.accountChatList)
 			)
 		})
-		if (isLastMessage) setLastMessage(lastMessageChatList)
+		if (isLastMessage) {
+			setLastMessage(lastMessageChatList)
+			setLastTime(lastMessageChatList)
+		}
 		mutate(currentUser, true)
 	}, [lastMessageChatList])
 
-	useEffect(() => {
-		if (localStorage['currChat']) {
-			const localCurrChat = JSON.parse(localStorage.getItem('currChat'))
-			if (localCurrChat) {
-				store.setCurrentChat(localCurrChat)
-			}
-		}
-	}, [])
+	const updateCurrChat = (user) => {
+		sendSeenMessage(user)
 
-	const updateCurrChat = (data) => {
-		localStorage.setItem('currChat', JSON.stringify(data))
-		store.setCurrentChat(data)
+		localStorage.setItem('currChat', JSON.stringify(user))
+		store.setCurrentChat(user)
+	}
+
+	const sendSeenMessage = async (user) => {
+		const data = {
+			_id: user?.lastMessage?.[0]?._id,
+		}
+
+		await axios.post(`${API_URL}/api/seen-message`, data, {
+			headers: {
+				'Content-Type': 'application/json',
+				authorization: await near.authToken(),
+			},
+		})
 	}
 
 	if (isValidating) {
@@ -76,7 +101,7 @@ const ChatList = ({
 					key={idx}
 					className={clsx(
 						'p-4 cursor-pointer hover:bg-primary-light-grey-200 transition duration-200',
-						store.currentChat.accountId === user.accountChatList &&
+						store.currentChat.accountChatList === user.accountChatList &&
 							'bg-primary-light-grey-200'
 					)}
 					onClick={() => updateCurrChat(user)}
@@ -101,10 +126,19 @@ const ChatList = ({
 									{prettyTruncate(user.accountChatList, 12, 'address')}
 								</p>
 								<p className="text-xs">
-									{user.lastMessage[0] &&
-										moment(user.lastMessage[0].createdAt)
-											.startOf('minute')
-											.fromNow()}
+									{(lastMessageChatList?.senderId === currentUser &&
+										lastMessageChatList?.receiverId === user.accountChatList) ||
+									(lastMessageChatList?.receiverId === currentUser &&
+										lastMessageChatList?.senderId === user.accountChatList) ||
+									(lastMessageCurrentUser?.senderId === currentUser &&
+										lastMessageCurrentUser?.receiverId ===
+											user.accountChatList) ||
+									(lastMessageCurrentUser?.receiverId === currentUser &&
+										lastMessageCurrentUser?.senderId === user.accountChatList)
+										? moment(lastTime?.createAt).startOf('minute').fromNow()
+										: moment(user?.lastMessage?.[0]?.createdAt)
+												.startOf('minute')
+												.fromNow()}
 								</p>
 							</div>
 							<div className="flex justify-between items-center gap-2 whitespace-nowrap">
@@ -134,19 +168,23 @@ const ChatList = ({
 									)}
 								</div>
 								<div>
-									{lastMessage.senderId === currentUser &&
-									lastMessage.receiverId === user.accountChatList ? (
+									{user?.lastMessage?.[0]?.senderId === currentUser &&
+									user?.lastMessage?.[0]?.receiverId ===
+										user.accountChatList ? (
 										<span>
-											{user?.lastMessage[0]?.status === 'unseen' ? (
+											{user?.lastMessage[0]?.status === 'delivered' ? (
 												<IconCheck size={16} />
-											) : (
+											) : user?.lastMessage[0]?.status === 'seen' ? (
 												<IconCheck size={16} color="green" />
+											) : (
+												<IconCheck size={16} />
 											)}
 										</span>
-									) : lastMessage.senderId === user.accountChatList &&
-									  lastMessage.receiverId === currentUser ? (
+									) : user?.lastMessage?.[0]?.senderId ===
+											user.accountChatList &&
+									  user?.lastMessage?.[0]?.receiverId === currentUser ? (
 										<span>
-											{user?.lastMessage[0]?.status === 'unseen' && (
+											{user?.lastMessage[0]?.status === 'delivered' && (
 												<div className="w-2.5 h-2.5 rounded-full bg-primary-blue"></div>
 											)}
 										</span>
@@ -154,8 +192,12 @@ const ChatList = ({
 										<span>
 											{user?.lastMessage[0]?.status === 'unseen' ? (
 												<IconCheck size={16} />
-											) : (
+											) : user?.lastMessage[0]?.status === 'seen' ? (
 												<IconCheck size={16} color="green" />
+											) : user?.lastMessage[0]?.status === 'delivered' ? (
+												<div className="w-2.5 h-2.5 rounded-full bg-primary-blue"></div>
+											) : (
+												<></>
 											)}
 										</span>
 									)}

@@ -27,9 +27,7 @@ const ChatFooter = ({ socket, initEmoji, fetchingMessages, currentUser }) => {
 
 	const ref = useRef(null)
 	const { isOpen, onToggle, onClose } = useDisclosure()
-	// const currentUserStore = useStore((state) => state.userProfile)
 	const currentChat = useStore((state) => state.currentChat)
-	// const currentUser = currentUserStore[0]
 
 	useEffect(() => {
 		socket.emit('typingMessage', {
@@ -123,13 +121,29 @@ const ChatFooter = ({ socket, initEmoji, fetchingMessages, currentUser }) => {
 		setMessage('')
 
 		try {
-			await axios.post(`${API_URL}/api/send-message`, messageData, {
+			const res = await axios.post(`${API_URL}/api/send-message`, messageData, {
 				headers: { authorization: await near.authToken() },
 			})
+
+			const id = await res.data.message._id
+			sendDeliveredMessage(id)
 			fetchingMessages()
 		} catch (error) {
 			console.log(error)
 		}
+	}
+
+	const sendDeliveredMessage = async (id) => {
+		const data = {
+			_id: id,
+		}
+
+		await axios.post(`${API_URL}/api/delivered-message`, data, {
+			headers: {
+				'Content-Type': 'application/json',
+				authorization: await near.authToken(),
+			},
+		})
 	}
 
 	const onChangeMessage = (value) => {
@@ -160,6 +174,7 @@ const ChatFooter = ({ socket, initEmoji, fetchingMessages, currentUser }) => {
 			}
 		}
 	}
+
 	return (
 		<div className="absolute inset-x-0 bottom-0 bg-white z-50 pt-4 mx-4">
 			<div className="flex items-center gap-1 mb-4">
