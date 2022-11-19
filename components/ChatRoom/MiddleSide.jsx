@@ -149,7 +149,7 @@ const MiddleSide = ({
 
 	if (progress === 'default') {
 		return (
-			<div className="h-full bg-primary-light-grey-200 p-40 col-span-9">
+			<div className="h-full bg-primary-light-grey-200 p-40 col-span-7 xl:col-span-9">
 				<div
 					classame="mx-auto w-[380px] bg-white p-4 rounded-2xl border-[1px] border-primary-dark-grey-200 shadow-2xl"
 					style={{
@@ -236,81 +236,6 @@ const MiddleSide = ({
 				store.isChatInfo === true && 'col-span-4 xl:col-span-9'
 			)}
 		>
-			{/* {progress === 'default' && (
-				<div className="h-full bg-primary-light-grey-200 p-40">
-					<div
-						classame="mx-auto w-[380px] bg-white p-4 rounded-2xl border-[1px] border-primary-dark-grey-200 shadow-2xl"
-						style={{
-							margin: 'auto',
-							width: '380px',
-							backgroundColor: 'white',
-							padding: 16,
-							borderRadius: 16,
-							border: 1,
-							borderColor: '#EDEDED',
-							boxShadow: '0 35px 60px -15px rgba(0, 0, 0, 0.3)',
-						}}
-					>
-						<div className="flex items-center gap-1 text-2xl font-semibold">
-							<p>Welcome to</p>
-							<img src="/assets/logo/ghosty-logo-black.png" width={100} />
-						</div>
-						<p className="text-sm text-justify mt-4">
-							Built for Near users, Ghosty a messaging platform for NEAR users
-							to simply and instantly messaging across wallet-to-wallet on the
-							NEAR network.
-						</p>
-						<p className="text-sm mt-4">
-							Check out our{' '}
-							<Link href="/faq">
-								<span className="underline underline-offset-2 cursor-pointer hover:text-primary-dark-grey hover:text-opacity-80 transition duration-200">
-									FAQs
-								</span>{' '}
-							</Link>
-							for more details.
-						</p>
-					</div>
-					<div
-						className="mx-auto w-[380px] bg-white p-4 rounded-2xl border-[1px] border-primary-dark-grey-200 shadow-2xl mt-4"
-						style={{
-							margin: 'auto',
-							width: '380px',
-							backgroundColor: 'white',
-							padding: 16,
-							borderRadius: 16,
-							border: 1,
-							borderColor: '#EDEDED',
-							boxShadow: '0 35px 60px -15px rgba(0, 0, 0, 0.3)',
-							marginTop: 16,
-						}}
-					>
-						<div className="flex items-center gap-1 text-lg font-semibold">
-							<IconExclamation color="red" />
-							<p>Important!</p>
-						</div>
-						<p className="text-sm text-justify mt-4">
-							Never share your confidential information, passwords, private keys
-							or seed phrases with ANYONE! Be extra careful when receiving any
-							external links or online forms.🔑
-						</p>
-					</div>
-
-					<div className="flex justify-center mt-10">
-						<Button
-							className="hover:bg-primary-black hover:bg-opacity-80"
-							variant="solid"
-							colorScheme="primary.light_grey"
-							color="white"
-							bg="black"
-							leftIcon={<IconPlus color="white" />}
-							onClick={onOpen}
-						>
-							Start new conversation
-						</Button>
-					</div>
-				</div>
-			)} */}
-
 			{progress === 'curr-chat' && (
 				<>
 					<ChatHead
@@ -493,6 +418,11 @@ const MiddleSide = ({
 						messages={messages}
 						currentUser={currentUser}
 					/>
+					{/* <AddAddressModal
+						isOpen={isOpen}
+						onClose={onClose}
+						currentUser={currentUser}
+					/> */}
 				</>
 			)}
 		</div>

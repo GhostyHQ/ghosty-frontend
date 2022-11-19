@@ -94,15 +94,14 @@ const AddAddressModal = ({ isOpen, onClose, currentUser }) => {
 					.then(() => {
 						mutate(currentUser, true)
 
-						localStorage.setItem(
-							'currChat',
-							JSON.stringify({
-								accountId: nearAccount,
-								alias: '',
-								_id: '',
-							})
-						)
-						store.setCurrentChat({ accountId: nearAccount, alias: '', _id: '' })
+						const dataCurrChat = {
+							accountChatList: nearAccount,
+							alias: '',
+							_id: '',
+						}
+
+						localStorage.setItem('currChat', JSON.stringify(dataCurrChat))
+						store.setCurrentChat(dataCurrChat)
 						onClose()
 						setIsLoading(false)
 						setIsDisable(false)

@@ -33,13 +33,13 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 
 	return (
 		<>
-			<div className="lg:grid grid-cols-6 xl:grid-cols-12 h-[100vh]">
+			<div className="lg:grid grid-cols-10 xl:grid-cols-12 h-[100vh]">
 				<LeftSide
 					socket={socket}
 					userProfile={userProfile}
 					currentUser={currentUser}
 					activeUsers={activeUsers}
-					className="relative col-span-2 xl:col-span-3 border-r-[1px]"
+					className="relative col-span-3 xl:col-span-3 border-r-[1px]"
 					setLastMessageChatList={lastMessageChatList}
 					setLastMessageCurrentUser={lastMessageCurrentUser}
 				/>
@@ -48,7 +48,7 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 						socket={socket}
 						currentUser={currentUser}
 						activeUsers={activeUsers}
-						className="relative col-span-3 xl:col-span-7 border-r-[1px]"
+						className="relative col-span-5 xl:col-span-7 border-r-[1px]"
 						initEmoji={initEmoji}
 						isToggleAddressInfo={(e) => setToggleUserInfo(e)}
 						setLastMessageChatList={(e) => setLastMessageChatList(e)}
