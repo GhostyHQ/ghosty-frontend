@@ -92,8 +92,6 @@ const AddAddressModal = ({ isOpen, onClose, currentUser }) => {
 						},
 					})
 					.then(() => {
-						mutate(currentUser, true)
-
 						const dataCurrChat = {
 							accountChatList: nearAccount,
 							alias: '',
@@ -105,6 +103,7 @@ const AddAddressModal = ({ isOpen, onClose, currentUser }) => {
 						onClose()
 						setIsLoading(false)
 						setIsDisable(false)
+						mutate(currentUser, true)
 					})
 					.catch((err) => {
 						const message =

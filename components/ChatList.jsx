@@ -30,7 +30,6 @@ const ChatList = ({
 	const messageSocketCurrentUser = useStore(
 		(state) => state.messageSocketCurrentUser
 	)
-	const deliveredSocket = useStore((state) => state.deliveredSocket)
 	const seenSocket = useStore((state) => state.seenSocket)
 
 	useEffect(() => {

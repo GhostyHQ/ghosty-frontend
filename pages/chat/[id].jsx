@@ -24,9 +24,6 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 
 	const setLastMessageSocket = useStore((state) => state.setLastMessageSocket)
 	const setMessageSocket = useStore((state) => state.setMessageSocket)
-	// const setMessageSocketCurrentUser = useStore(
-	// 	(state) => state.setMessageSocketCurrentUser
-	// )
 	const setDeliveredSocket = useStore((state) => state.setDeliveredSocket)
 	const setSeenSocket = useStore((state) => state.setSeenSocket)
 

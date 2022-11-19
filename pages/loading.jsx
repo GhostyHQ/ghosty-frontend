@@ -9,7 +9,11 @@ const Loading = () => {
 	const router = useRouter()
 
 	useEffect(() => {
-		router.push(`/chat/${near?.currentUser?.accountId}`)
+		setInterval(() => {
+			router.push(`/chat/${near?.currentUser?.accountId}`, null, {
+				shallow: false,
+			})
+		}, 1000)
 	}, [initialized])
 
 	return (
