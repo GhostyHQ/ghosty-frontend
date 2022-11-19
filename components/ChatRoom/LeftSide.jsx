@@ -79,6 +79,7 @@ const LeftSide = ({
 		wallet.signOut()
 		window.location.replace(`${location.protocol}//${location.host}`)
 		socket.emit('logout', currentUser)
+		localStorage.removeItem('currChat')
 	}
 
 	return (
@@ -155,8 +156,8 @@ const LeftSide = ({
 					</div>
 				</div>
 				<div className="overflow-y-scroll h-[100vh] pt-32">
-					{data?.chatList?.length === 0 ? (
-						<div className="text-center">
+					{data?.length === 0 ? (
+						<div className="text-center mx-4">
 							<img
 								className="mx-auto"
 								src="/assets/icon-person.png"

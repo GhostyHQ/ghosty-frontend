@@ -37,35 +37,39 @@ const ChatList = ({
 	}, [])
 
 	useEffect(() => {
-		const isLastMessage = data?.some((user) => {
-			return (
-				(lastMessageCurrentUser?.senderId === currentUser &&
-					lastMessageCurrentUser?.receiverId === user.accountChatList) ||
-				(lastMessageCurrentUser?.receiverId === currentUser &&
-					lastMessageCurrentUser?.senderId === user.accountChatList)
-			)
-		})
-		if (isLastMessage) {
-			setLastMessage(lastMessageCurrentUser)
-			setLastTime(lastMessageCurrentUser)
+		if (!isValidating) {
+			const isLastMessage = data?.some((user) => {
+				return (
+					(lastMessageCurrentUser?.senderId === currentUser &&
+						lastMessageCurrentUser?.receiverId === user.accountChatList) ||
+					(lastMessageCurrentUser?.receiverId === currentUser &&
+						lastMessageCurrentUser?.senderId === user.accountChatList)
+				)
+			})
+			if (isLastMessage) {
+				setLastMessage(lastMessageCurrentUser)
+				setLastTime(lastMessageCurrentUser)
+			}
+			mutate(currentUser, true)
 		}
-		mutate(currentUser, true)
 	}, [lastMessageCurrentUser])
 
 	useEffect(() => {
-		const isLastMessage = data?.some((user) => {
-			return (
-				(lastMessageChatList?.senderId === currentUser &&
-					lastMessageChatList?.receiverId === user.accountChatList) ||
-				(lastMessageChatList?.receiverId === currentUser &&
-					lastMessageChatList?.senderId === user.accountChatList)
-			)
-		})
-		if (isLastMessage) {
-			setLastMessage(lastMessageChatList)
-			setLastTime(lastMessageChatList)
+		if (!isValidating) {
+			const isLastMessage = data?.some((user) => {
+				return (
+					(lastMessageChatList?.senderId === currentUser &&
+						lastMessageChatList?.receiverId === user.accountChatList) ||
+					(lastMessageChatList?.receiverId === currentUser &&
+						lastMessageChatList?.senderId === user.accountChatList)
+				)
+			})
+			if (isLastMessage) {
+				setLastMessage(lastMessageChatList)
+				setLastTime(lastMessageChatList)
+			}
+			mutate(currentUser, true)
 		}
-		mutate(currentUser, true)
 	}, [lastMessageChatList])
 
 	const updateCurrChat = (user) => {

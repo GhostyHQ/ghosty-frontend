@@ -14,6 +14,7 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 	const [activeUsers, setActiveUsers] = useState()
 	const [lastMessageChatList, setLastMessageChatList] = useState()
 	const [lastMessageCurrentUser, setLastMessageCurrentUser] = useState()
+	const [progress, setProgress] = useState('')
 
 	const store = useStore()
 	const isChatRoomMobile = useStore((state) => state.isChatRoomMobile)
@@ -52,8 +53,11 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 						isToggleAddressInfo={(e) => setToggleUserInfo(e)}
 						setLastMessageChatList={(e) => setLastMessageChatList(e)}
 						setLastMessageCurrentUser={(e) => setLastMessageCurrentUser(e)}
+						setProgressProps={(e) => setProgress(e)}
 					/>
-					{isChatInfo === false && <ChatInfo activeUsers={activeUsers} />}
+					{isChatInfo === false && progress !== 'default' && (
+						<ChatInfo activeUsers={activeUsers} />
+					)}
 				</Show>
 				<Show below="lg">
 					<Drawer

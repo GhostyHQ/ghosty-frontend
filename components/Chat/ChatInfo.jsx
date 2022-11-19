@@ -31,6 +31,10 @@ const ChatInfo = ({ activeUsers }) => {
 				msg.receiverId === userProfile.accountId)
 	)
 
+	if (!currChat) {
+		return null
+	}
+
 	return (
 		<div className="lg:col-span-2 xl:col-span-2">
 			<div
