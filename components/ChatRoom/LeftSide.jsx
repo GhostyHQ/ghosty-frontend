@@ -101,14 +101,14 @@ const LeftSide = ({
 							>
 								<IconPlus size={16} />
 							</div>
-							<div className="relative">
+							<div className="md:relative">
 								<Popover placement="bottom">
 									<PopoverTrigger>
 										<div className="p-2 bg-primary-light-grey bg-opacity-20 rounded-full cursor-pointer hover:bg-opacity-10 transition duration-200">
 											<IconEllipsis size={16} />
 										</div>
 									</PopoverTrigger>
-									<PopoverContent color="black">
+									<PopoverContent color="black" className="mx-4">
 										<PopoverArrow />
 										<PopoverBody boxShadow="2xl">
 											<div className="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-primary-light-grey hover:bg-opacity-20 transition duration-200">
@@ -117,12 +117,14 @@ const LeftSide = ({
 													Blocked Users
 												</p>
 											</div>
-											<div className="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-primary-light-grey hover:bg-opacity-20 transition duration-200 mb-2">
-												<IconQuestion size={24} />
-												<p className="text-primary-dark-grey font-semibold">
-													FAQs
-												</p>
-											</div>
+											<Link href="/faq">
+												<div className="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-primary-light-grey hover:bg-opacity-20 transition duration-200 mb-2">
+													<IconQuestion size={24} />
+													<p className="text-primary-dark-grey font-semibold">
+														FAQs
+													</p>
+												</div>
+											</Link>
 											<div className="border-t-[1px] border-primary-light-grey border-opacity-30 pt-2">
 												<div
 													className="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-primary-light-grey hover:bg-opacity-20 transition duration-200"

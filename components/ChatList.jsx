@@ -75,6 +75,7 @@ const ChatList = ({
 
 		localStorage.setItem('currChat', JSON.stringify(user))
 		store.setCurrentChat(user)
+		store.setIsChatRoomMobile(true)
 	}
 
 	const sendSeenMessage = async (user) => {

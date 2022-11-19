@@ -201,6 +201,7 @@ const ChatFooter = ({ socket, initEmoji, fetchingMessages, currentUser }) => {
 							borderColor="primary.light_grey_2"
 							position="relative"
 							width="100%"
+							className="mx-4 md:mx-0"
 						>
 							<PopoverArrow bg="primary.light_grey_2" />
 							<div>

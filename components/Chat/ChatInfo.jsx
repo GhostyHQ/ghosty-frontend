@@ -9,15 +9,31 @@ import {
 } from '@chakra-ui/react'
 
 import { prettyTruncate } from '../../utils/common'
-import { IconBlocked, IconTag } from '../Icon'
+import { IconBlocked, IconLeft, IconTag } from '../Icon'
 import useStore from '../../lib/store'
+import { Fragment } from 'react'
 
 const ChatInfo = ({ activeUsers }) => {
 	const currChat = useStore((state) => state.currentChat)
 	const messages = useStore((state) => state.messages)
+	const userProfile = useStore((state) => state.userProfile)
+	const setIsChatInfoMobile = useStore((state) => state.setIsChatInfoMobile)
+
+	const hasMedia = messages?.some(
+		(msg) =>
+			msg.message.image !== '' &&
+			(msg.senderId === userProfile.accountId ||
+				msg.receiverId === userProfile.accountId)
+	)
 
 	return (
 		<div>
+			<div
+				className="block md:hidden m-4"
+				onClick={() => setIsChatInfoMobile(false)}
+			>
+				<IconLeft size={20} />
+			</div>
 			<div className="mt-10 flex justify-center">
 				<img
 					className="w-24 rounded-full"
@@ -66,25 +82,35 @@ const ChatInfo = ({ activeUsers }) => {
 						</AccordionButton>
 					</h2>
 					<AccordionPanel pb={4}>
-						<div className="grid grid-cols-2 gap-2 overflow-y-scroll h-80">
-							{messages?.map((msg, idx) => (
-								<>
-									{msg.message.image && (
-										<a
-											href={`https://paras-cdn.imgix.net/${msg.message.image}?width=800`}
-											target="_blank"
-											rel="noreferrer"
-										>
-											<img
-												key={idx}
-												className="p-2 rounded-md cursor-pointer hover:bg-primary-light-grey-200 transition duration-200"
-												src={`https://paras-cdn.imgix.net/${msg.message.image}?width=800`}
-												width={100}
-											/>
-										</a>
-									)}
-								</>
-							))}
+						<div className="grid grid-cols-2 place-items-center gap-2 overflow-y-scroll h-80">
+							{hasMedia ? (
+								messages?.map((msg, idx) => (
+									<Fragment key={idx}>
+										{msg.message.image && (
+											<a
+												href={`https://paras-cdn.imgix.net/${msg.message.image}?width=800`}
+												target="_blank"
+												rel="noreferrer"
+											>
+												<img
+													className="p-2 rounded-md cursor-pointer hover:bg-primary-light-grey-200 transition duration-200"
+													src={`https://paras-cdn.imgix.net/${msg.message.image}?width=800`}
+													width={100}
+												/>
+											</a>
+										)}
+									</Fragment>
+								))
+							) : (
+								<div className="col-span-2 mt-10">
+									<img
+										className="w-60 mx-auto"
+										src={'/assets/peeps-2.png'}
+										alt="empty media"
+									/>
+									<p className="mt-4 text-center text-xl">Has No Media</p>
+								</div>
+							)}
 						</div>
 					</AccordionPanel>
 				</AccordionItem>

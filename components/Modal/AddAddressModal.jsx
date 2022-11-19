@@ -124,7 +124,7 @@ const AddAddressModal = ({ isOpen, onClose, currentUser }) => {
 			<Modal isOpen={isOpen} onClose={onClose}>
 				<Toaster position="top-center" reverseOrder={true} />
 				<ModalOverlay />
-				<ModalContent>
+				<ModalContent className="mx-4 md:mx-0">
 					<ModalHeader className="text-center">
 						<p className="font-semibold text-primary-black">Start New Chat</p>
 						<p className="text-sm">

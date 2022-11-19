@@ -226,6 +226,7 @@ const MiddleSide = ({
 					<ChatHead
 						activeUsers={activeUsers}
 						setToggleUserInfo={() => {
+							store.setIsChatInfoMobile(true)
 							setToggleUserInfo(!toggleUserInfo)
 						}}
 					/>

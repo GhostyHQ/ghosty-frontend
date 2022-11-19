@@ -2,14 +2,21 @@ import { generateFromString } from 'generate-avatar'
 import useStore from '../../lib/store'
 
 import { prettyTruncate } from '../../utils/common'
-import { IconEllipsis } from '../Icon'
+import { IconEllipsis, IconLeft } from '../Icon'
 
 const ChatHead = ({ activeUsers, setToggleUserInfo }) => {
+	const store = useStore()
 	const currChat = useStore((state) => state.currentChat)
 
 	return (
 		<div className="absolute inset-x-0 flex justify-between items-center p-4 bg-white border-b-[1px]">
 			<div className="flex items-center gap-2">
+				<div
+					className="block md:hidden mr-4"
+					onClick={() => store.setIsChatRoomMobile(false)}
+				>
+					<IconLeft size={20} />
+				</div>
 				<img
 					className="w-8 rounded-full"
 					src={`data:image/svg+xml;utf8,${generateFromString(
