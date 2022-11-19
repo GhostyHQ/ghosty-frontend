@@ -12,7 +12,7 @@ const ChatHead = ({ activeUsers, setToggleUserInfo }) => {
 		<div className="absolute inset-x-0 flex justify-between items-center p-4 bg-white border-b-[1px]">
 			<div className="flex items-center gap-2">
 				<div
-					className="block md:hidden mr-4"
+					className="block lg:hidden mr-4 cursor-pointer"
 					onClick={() => store.setIsChatRoomMobile(false)}
 				>
 					<IconLeft size={20} />

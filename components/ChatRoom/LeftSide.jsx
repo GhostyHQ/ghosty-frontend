@@ -59,7 +59,7 @@ const LeftSide = ({
 
 	useEffect(() => {
 		setFilteredUsers(data)
-	}, [data])
+	})
 
 	useEffect(() => {
 		const timeout = setTimeout(() => {

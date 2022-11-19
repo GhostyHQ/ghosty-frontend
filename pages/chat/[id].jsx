@@ -18,6 +18,7 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 	const store = useStore()
 	const isChatRoomMobile = useStore((state) => state.isChatRoomMobile)
 	const isChatInfoMobile = useStore((state) => state.isChatInfoMobile)
+	const isChatInfo = useStore((state) => state.isChatInfo)
 
 	const socket = io('http://localhost:8000')
 
@@ -31,29 +32,29 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 
 	return (
 		<>
-			<div className="md:grid grid-cols-5 h-[100vh]">
+			<div className="lg:grid grid-cols-6 xl:grid-cols-5 h-[100vh]">
 				<LeftSide
 					userProfile={userProfile}
 					currentUser={currentUser}
 					activeUsers={activeUsers}
-					className="relative border-r-[1px]"
+					className="relative col-span-2 xl:col-span-1 border-r-[1px]"
 					setLastMessageChatList={lastMessageChatList}
 					setLastMessageCurrentUser={lastMessageCurrentUser}
 				/>
-				<Show above="md">
+				<Show above="lg">
 					<MiddleSide
 						socket={socket}
 						currentUser={currentUser}
 						activeUsers={activeUsers}
-						className="relative col-span-3 border-r-[1px]"
+						className="relative col-span-3 xl:col-span-3 border-r-[1px]"
 						initEmoji={initEmoji}
 						isToggleAddressInfo={(e) => setToggleUserInfo(e)}
 						setLastMessageChatList={(e) => setLastMessageChatList(e)}
 						setLastMessageCurrentUser={(e) => setLastMessageCurrentUser(e)}
 					/>
-					{toggleUserInfo && <ChatInfo activeUsers={activeUsers} />}
+					{isChatInfo === false && <ChatInfo activeUsers={activeUsers} />}
 				</Show>
-				<Show below="md">
+				<Show below="lg">
 					<Drawer
 						onClose={() => store.setIsChatRoomMobile(false)}
 						isOpen={isChatRoomMobile}
@@ -74,7 +75,7 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 						</DrawerContent>
 					</Drawer>
 				</Show>
-				<Show below="md">
+				<Show below="lg">
 					<Drawer
 						placement="bottom"
 						onClose={() => store.setIsChatInfoMobile(false)}

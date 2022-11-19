@@ -136,7 +136,7 @@ const MiddleSide = ({
 				className={clsx(
 					'h-full w-full p-40 text-center',
 					className,
-					toggleUserInfo && 'col-span-4'
+					store.isChatInfo === true && 'col-span-4 xl:col-span-4'
 				)}
 			>
 				<Spinner />
@@ -145,7 +145,12 @@ const MiddleSide = ({
 	}
 
 	return (
-		<div className={clsx(className, toggleUserInfo && 'col-span-4')}>
+		<div
+			className={clsx(
+				className,
+				store.isChatInfo === true && 'col-span-4 xl:col-span-4'
+			)}
+		>
 			{progress === 'default' && (
 				<div className="h-full bg-primary-light-grey-200 p-40">
 					<div
@@ -227,6 +232,7 @@ const MiddleSide = ({
 						activeUsers={activeUsers}
 						setToggleUserInfo={() => {
 							store.setIsChatInfoMobile(true)
+							store.setIsChatInfo(!toggleUserInfo)
 							setToggleUserInfo(!toggleUserInfo)
 						}}
 					/>

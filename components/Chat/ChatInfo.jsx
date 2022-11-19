@@ -29,7 +29,7 @@ const ChatInfo = ({ activeUsers }) => {
 	return (
 		<div>
 			<div
-				className="block md:hidden m-4"
+				className="block lg:hidden m-4 cursor-pointer"
 				onClick={() => setIsChatInfoMobile(false)}
 			>
 				<IconLeft size={20} />
