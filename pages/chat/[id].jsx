@@ -2,6 +2,7 @@ import { Drawer, DrawerContent, DrawerOverlay, Show } from '@chakra-ui/react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import io from 'socket.io-client'
+import { useSWRConfig } from 'swr'
 
 import ChatInfo from '../../components/Chat/ChatInfo'
 import LeftSide from '../../components/ChatRoom/LeftSide'
@@ -13,6 +14,7 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 	const [toggleUserInfo, setToggleUserInfo] = useState(true)
 	const [activeUsers, setActiveUsers] = useState()
 	const [progress, setProgress] = useState('')
+	const { mutate } = useSWRConfig()
 
 	const store = useStore()
 
@@ -22,9 +24,11 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 
 	const setLastMessageSocket = useStore((state) => state.setLastMessageSocket)
 	const setMessageSocket = useStore((state) => state.setMessageSocket)
-	const setMessageSocketCurrentUser = useStore(
-		(state) => state.setMessageSocketCurrentUser
-	)
+	// const setMessageSocketCurrentUser = useStore(
+	// 	(state) => state.setMessageSocketCurrentUser
+	// )
+	const setDeliveredSocket = useStore((state) => state.setDeliveredSocket)
+	const setSeenSocket = useStore((state) => state.setSeenSocket)
 
 	const socket = io('http://localhost:8000')
 
@@ -43,14 +47,42 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 	}, [])
 
 	useEffect(() => {
-		socket.on('getMessage', (data) => {
+		socket.on('getMessageSender', (data) => {
 			setMessageSocket(data)
 		})
-	})
+	}, [])
 
 	useEffect(() => {
-		socket.on('getMessageCurrentUser', (data) => {
-			setMessageSocketCurrentUser(data)
+		socket.on('getMessageReceiver', (data) => {
+			setMessageSocket(data)
+		})
+	}, [])
+
+	useEffect(() => {
+		socket.on('getDeliveredSender', (data) => {
+			setDeliveredSocket(data)
+			mutate(currentUser, true)
+		})
+	}, [])
+
+	useEffect(() => {
+		socket.on('getDeliveredReceiver', (data) => {
+			setDeliveredSocket(data)
+			mutate(currentUser, true)
+		})
+	}, [])
+
+	useEffect(() => {
+		socket.on('getSeenReceiver', (data) => {
+			setSeenSocket(data)
+			setDeliveredSocket({})
+		})
+	}, [])
+
+	useEffect(() => {
+		socket.on('getSeenSender', (data) => {
+			setSeenSocket(data)
+			setDeliveredSocket({})
 		})
 	}, [])
 

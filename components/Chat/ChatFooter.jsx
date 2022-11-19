@@ -28,6 +28,7 @@ const ChatFooter = ({ socket, initEmoji, fetchingMessages, currentUser }) => {
 	const ref = useRef(null)
 	const { isOpen, onToggle, onClose } = useDisclosure()
 	const currentChat = useStore((state) => state.currentChat)
+	const setSeenSocket = useStore((state) => state.setSeenSocket)
 
 	useEffect(() => {
 		socket.emit('typingMessage', {
@@ -41,6 +42,7 @@ const ChatFooter = ({ socket, initEmoji, fetchingMessages, currentUser }) => {
 		const sendImageMessage = async () => {
 			if (imgFile) {
 				try {
+					setSeenSocket({})
 					const messageData = {
 						senderId: currentUser,
 						receiverId: currentChat.accountChatList,
@@ -102,6 +104,7 @@ const ChatFooter = ({ socket, initEmoji, fetchingMessages, currentUser }) => {
 	}
 
 	const sendMessage = async () => {
+		setSeenSocket({})
 		const messageData = {
 			senderId: currentUser,
 			receiverId: currentChat.accountChatList,
@@ -138,12 +141,17 @@ const ChatFooter = ({ socket, initEmoji, fetchingMessages, currentUser }) => {
 			_id: id,
 		}
 
-		await axios.post(`${API_URL}/api/delivered-message`, data, {
-			headers: {
-				'Content-Type': 'application/json',
-				authorization: await near.authToken(),
-			},
-		})
+		try {
+			const res = await axios.post(`${API_URL}/api/delivered-message`, data, {
+				headers: {
+					'Content-Type': 'application/json',
+					authorization: await near.authToken(),
+				},
+			})
+			socket.emit('deliveredMessage', res.data.data)
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
 	const onChangeMessage = (value) => {

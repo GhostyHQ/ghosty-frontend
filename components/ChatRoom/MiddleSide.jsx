@@ -28,7 +28,6 @@ const MiddleSide = ({
 	const [isLoading, setIsLoading] = useState(false)
 	const [progress, setProgress] = useState('')
 	const [messages, setMessages] = useState([])
-	const [socketMessages, setSocketMessages] = useState('')
 	const [isOpenImage, setIsOpenImage] = useState(false)
 	const [imageUrl, setImageUrl] = useState('')
 
@@ -38,6 +37,7 @@ const MiddleSide = ({
 	const userProfile = useStore((state) => state.userProfile)
 
 	const lastMessageSocket = useStore((state) => state.lastMessageSocket)
+	const messageSocket = useStore((state) => state.messageSocket)
 
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const scrollRef = useRef()
@@ -53,16 +53,15 @@ const MiddleSide = ({
 	}, [messages])
 
 	useEffect(() => {
-		if (socketMessages !== '') {
+		if (messageSocket !== '') {
 			if (
-				socketMessages.senderId === currChatStore.accountChatList &&
-				socketMessages.receiverId === currentUser
+				messageSocket.senderId === currChatStore.accountChatList &&
+				messageSocket.receiverId === currentUser
 			) {
-				setMessages([...messages, socketMessages])
+				setMessages([...messages, messageSocket])
 			}
 		}
-		setSocketMessages('')
-	}, [socketMessages])
+	}, [messageSocket])
 
 	useEffect(() => {
 		setIsLoading(true)
@@ -116,7 +115,6 @@ const MiddleSide = ({
 			)
 			setMessages(res.data.data)
 			store.setMessages(res.data.data)
-			setSocketMessages('')
 			setIsLoading(false)
 		} catch (error) {
 			console.log(error)

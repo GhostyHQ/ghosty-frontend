@@ -13,6 +13,7 @@ import { IconCheck } from './Icon'
 import _ from 'lodash'
 
 const ChatList = ({
+	socket,
 	currentUser,
 	isValidating,
 	data,
@@ -29,6 +30,8 @@ const ChatList = ({
 	const messageSocketCurrentUser = useStore(
 		(state) => state.messageSocketCurrentUser
 	)
+	const deliveredSocket = useStore((state) => state.deliveredSocket)
+	const seenSocket = useStore((state) => state.seenSocket)
 
 	useEffect(() => {
 		if (localStorage['currChat']) {
@@ -53,7 +56,7 @@ const ChatList = ({
 				setLastMessage(messageSocketCurrentUser)
 				setLastTime(messageSocketCurrentUser)
 			}
-			mutate(currentUser, true)
+			// mutate(currentUser, true)
 		}
 	}, [messageSocketCurrentUser])
 
@@ -71,12 +74,15 @@ const ChatList = ({
 				setLastMessage(messageSocket)
 				setLastTime(messageSocket)
 			}
-			mutate(currentUser, true)
+			// mutate(currentUser, true)
 		}
 	}, [messageSocket])
 
 	const updateCurrChat = (user) => {
-		if (user?.lastMessage?.[0]?.receiverId === currentUser) {
+		if (
+			user?.lastMessage?.[0]?.receiverId === currentUser &&
+			user?.lastMessage?.[0]?.status !== 'seen'
+		) {
 			sendSeenMessage(user)
 		}
 
@@ -91,12 +97,14 @@ const ChatList = ({
 		}
 
 		try {
-			await axios.post(`${API_URL}/api/seen-message`, data, {
+			const res = await axios.post(`${API_URL}/api/seen-message`, data, {
 				headers: {
 					'Content-Type': 'application/json',
 					authorization: await near.authToken(),
 				},
 			})
+			socket.emit('seenMessage', res.data.data)
+			mutate(currentUser, true)
 		} catch (error) {
 			console.log(error)
 		}
@@ -191,7 +199,11 @@ const ChatList = ({
 										user.accountChatList ? (
 										<span>
 											{user?.lastMessage[0]?.status === 'delivered' ? (
-												<IconCheck size={16} />
+												seenSocket?.status ? (
+													<IconCheck size={16} color="green" />
+												) : (
+													<IconCheck size={16} />
+												)
 											) : user?.lastMessage[0]?.status === 'seen' ? (
 												<IconCheck size={16} color="green" />
 											) : (

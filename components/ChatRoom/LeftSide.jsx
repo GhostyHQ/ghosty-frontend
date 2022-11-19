@@ -165,6 +165,7 @@ const LeftSide = ({
 						</div>
 					) : (
 						<ChatList
+							socket={socket}
 							currentUser={currentUser}
 							isValidating={isValidating}
 							data={data}
