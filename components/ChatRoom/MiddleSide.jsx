@@ -136,7 +136,7 @@ const MiddleSide = ({
 				className={clsx(
 					'h-full w-full p-40 text-center',
 					className,
-					store.isChatInfo === true && 'col-span-4 xl:col-span-4'
+					store.isChatInfo === true && 'col-span-4 xl:col-span-9'
 				)}
 			>
 				<Spinner />
@@ -148,7 +148,7 @@ const MiddleSide = ({
 		<div
 			className={clsx(
 				className,
-				store.isChatInfo === true && 'col-span-4 xl:col-span-4'
+				store.isChatInfo === true && 'col-span-4 xl:col-span-9'
 			)}
 		>
 			{progress === 'default' && (

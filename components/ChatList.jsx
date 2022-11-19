@@ -134,7 +134,7 @@ const ChatList = ({
 								<p className="text-base font-semibold">
 									{prettyTruncate(
 										user.alias || user.accountChatList,
-										20,
+										15,
 										'address'
 									)}
 								</p>

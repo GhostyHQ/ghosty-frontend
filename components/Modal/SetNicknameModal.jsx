@@ -108,7 +108,7 @@ const SetNicknameModal = ({ isOpen, onClose, currentUser, accountUser }) => {
 							onFocus={onFocusInput}
 						/>
 						<p className="text-xs mt-1">
-							Max 20 chars and this is only visible to you.
+							Max 15 chars and this is only visible to you.
 						</p>
 					</ModalBody>
 					<ModalFooter>

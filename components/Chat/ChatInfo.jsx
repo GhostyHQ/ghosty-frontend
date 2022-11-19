@@ -32,7 +32,7 @@ const ChatInfo = ({ activeUsers }) => {
 	)
 
 	return (
-		<div>
+		<div className="lg:col-span-2 xl:col-span-2">
 			<div
 				className="block lg:hidden m-4 cursor-pointer"
 				onClick={() => setIsChatInfoMobile(false)}
