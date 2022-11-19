@@ -34,6 +34,7 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 		<>
 			<div className="lg:grid grid-cols-6 xl:grid-cols-12 h-[100vh]">
 				<LeftSide
+					socket={socket}
 					userProfile={userProfile}
 					currentUser={currentUser}
 					activeUsers={activeUsers}

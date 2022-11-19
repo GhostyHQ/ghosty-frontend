@@ -29,6 +29,7 @@ import { useEffect, useState } from 'react'
 import _ from 'lodash'
 
 const LeftSide = ({
+	socket,
 	className,
 	userProfile,
 	currentUser,
@@ -77,6 +78,7 @@ const LeftSide = ({
 	const _signOut = () => {
 		wallet.signOut()
 		window.location.replace(`${location.protocol}//${location.host}`)
+		socket.emit('logout', currentUser)
 	}
 
 	return (
