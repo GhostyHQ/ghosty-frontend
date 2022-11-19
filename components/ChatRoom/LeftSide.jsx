@@ -59,10 +59,6 @@ const LeftSide = ({
 	}
 
 	useEffect(() => {
-		setFilteredUsers(data)
-	})
-
-	useEffect(() => {
 		const timeout = setTimeout(() => {
 			const filter = _.filter(data, (user) => {
 				return _.includes(
@@ -73,7 +69,7 @@ const LeftSide = ({
 			setFilteredUsers(filter)
 		}, 100)
 		return () => clearTimeout(timeout)
-	}, [searchValue])
+	}, [searchValue, data])
 
 	const _signOut = () => {
 		wallet.signOut()
