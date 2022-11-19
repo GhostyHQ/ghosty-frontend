@@ -17,9 +17,12 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 	const [progress, setProgress] = useState('')
 
 	const store = useStore()
+
 	const isChatRoomMobile = useStore((state) => state.isChatRoomMobile)
 	const isChatInfoMobile = useStore((state) => state.isChatInfoMobile)
 	const isChatInfo = useStore((state) => state.isChatInfo)
+
+	const setLastMessageSocket = useStore((state) => state.setLastMessageSocket)
 
 	const socket = io('http://localhost:8000')
 
@@ -28,6 +31,12 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 
 		socket.on('getUser', (users) => {
 			setActiveUsers(users)
+		})
+	}, [])
+
+	useEffect(() => {
+		socket.on('getTypingMessage', (data) => {
+			setLastMessageSocket(data)
 		})
 	}, [])
 

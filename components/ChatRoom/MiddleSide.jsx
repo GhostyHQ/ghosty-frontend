@@ -31,7 +31,6 @@ const MiddleSide = ({
 	const [progress, setProgress] = useState('')
 	const [messages, setMessages] = useState([])
 	const [socketMessages, setSocketMessages] = useState('')
-	const [typingMessage, setTypingMessage] = useState('')
 	const [isOpenImage, setIsOpenImage] = useState(false)
 	const [imageUrl, setImageUrl] = useState('')
 
@@ -39,6 +38,9 @@ const MiddleSide = ({
 
 	const currChatStore = useStore((state) => state.currentChat)
 	const userProfile = useStore((state) => state.userProfile)
+
+	const lastMessageSocket = useStore((state) => state.lastMessageSocket)
+
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const scrollRef = useRef()
 
@@ -50,10 +52,6 @@ const MiddleSide = ({
 
 		socket.on('getMessageCurrentUser', (data) => {
 			setLastMessageCurrentUser(data)
-		})
-
-		socket.on('getTypingMessage', (data) => {
-			setTypingMessage(data)
 		})
 
 		if (scrollRef.current) {
@@ -401,9 +399,9 @@ const MiddleSide = ({
 							</div>
 						)}
 					</div>
-					{typingMessage &&
-						typingMessage.message &&
-						typingMessage.senderId === currChatStore.accountChatList && (
+					{lastMessageSocket &&
+						lastMessageSocket.message &&
+						lastMessageSocket.senderId === currChatStore.accountChatList && (
 							<div className="flex items-center gap-2 z-50 absolute bottom-20 bg-primary-light-grey-200 bg-opacity-40 p-2 rounded-t-lg">
 								<div className="flex flex-col justify-end w-6 h-6">
 									<img
