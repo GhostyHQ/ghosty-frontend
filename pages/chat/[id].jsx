@@ -12,8 +12,6 @@ import useStore from '../../lib/store'
 const Chat = ({ initEmoji, userProfile, currentUser }) => {
 	const [toggleUserInfo, setToggleUserInfo] = useState(true)
 	const [activeUsers, setActiveUsers] = useState()
-	const [lastMessageChatList, setLastMessageChatList] = useState()
-	const [lastMessageCurrentUser, setLastMessageCurrentUser] = useState()
 	const [progress, setProgress] = useState('')
 
 	const store = useStore()
@@ -23,6 +21,10 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 	const isChatInfo = useStore((state) => state.isChatInfo)
 
 	const setLastMessageSocket = useStore((state) => state.setLastMessageSocket)
+	const setMessageSocket = useStore((state) => state.setMessageSocket)
+	const setMessageSocketCurrentUser = useStore(
+		(state) => state.setMessageSocketCurrentUser
+	)
 
 	const socket = io('http://localhost:8000')
 
@@ -40,6 +42,18 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 		})
 	}, [])
 
+	useEffect(() => {
+		socket.on('getMessage', (data) => {
+			setMessageSocket(data)
+		})
+	})
+
+	useEffect(() => {
+		socket.on('getMessageCurrentUser', (data) => {
+			setMessageSocketCurrentUser(data)
+		})
+	}, [])
+
 	return (
 		<>
 			<div className="lg:grid grid-cols-10 xl:grid-cols-12 h-[100vh]">
@@ -49,8 +63,6 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 					currentUser={currentUser}
 					activeUsers={activeUsers}
 					className="relative col-span-3 xl:col-span-3 border-r-[1px]"
-					setLastMessageChatList={lastMessageChatList}
-					setLastMessageCurrentUser={lastMessageCurrentUser}
 				/>
 				<Show above="lg">
 					<MiddleSide
@@ -60,8 +72,6 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 						className="relative col-span-5 xl:col-span-7 border-r-[1px]"
 						initEmoji={initEmoji}
 						isToggleAddressInfo={(e) => setToggleUserInfo(e)}
-						setLastMessageChatList={(e) => setLastMessageChatList(e)}
-						setLastMessageCurrentUser={(e) => setLastMessageCurrentUser(e)}
 						setProgressProps={(e) => setProgress(e)}
 					/>
 					{isChatInfo === false && progress !== 'default' && (
@@ -83,8 +93,6 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 								className="relative col-span-3 border-r-[1px]"
 								initEmoji={initEmoji}
 								isToggleAddressInfo={(e) => setToggleUserInfo(e)}
-								setLastMessageChatList={(e) => setLastMessageChatList(e)}
-								setLastMessageCurrentUser={(e) => setLastMessageCurrentUser(e)}
 							/>
 						</DrawerContent>
 					</Drawer>

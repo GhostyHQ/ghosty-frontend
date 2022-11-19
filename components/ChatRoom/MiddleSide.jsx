@@ -22,8 +22,6 @@ const MiddleSide = ({
 	currentUser,
 	activeUsers,
 	isToggleAddressInfo = () => {},
-	setLastMessageChatList = () => {},
-	setLastMessageCurrentUser = () => {},
 	setProgressProps = () => {},
 }) => {
 	const [toggleUserInfo, setToggleUserInfo] = useState(true)
@@ -45,15 +43,6 @@ const MiddleSide = ({
 	const scrollRef = useRef()
 
 	useEffect(() => {
-		socket.on('getMessage', (data) => {
-			setLastMessageChatList(data)
-			setSocketMessages(data)
-		})
-
-		socket.on('getMessageCurrentUser', (data) => {
-			setLastMessageCurrentUser(data)
-		})
-
 		if (scrollRef.current) {
 			scrollRef.current.scrollIntoView({
 				// behavior: 'smooth',

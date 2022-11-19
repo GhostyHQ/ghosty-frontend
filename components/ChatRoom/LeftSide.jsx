@@ -34,8 +34,6 @@ const LeftSide = ({
 	userProfile,
 	currentUser,
 	activeUsers,
-	setLastMessageChatList,
-	setLastMessageCurrentUser,
 }) => {
 	const [searchValue, setSearchValue] = useState('')
 	const [filteredUsers, setFilteredUsers] = useState()
@@ -172,8 +170,6 @@ const LeftSide = ({
 							data={data}
 							filteredUsers={filteredUsers}
 							activeUsers={activeUsers}
-							lastMessageChatList={setLastMessageChatList}
-							lastMessageCurrentUser={setLastMessageCurrentUser}
 						/>
 					)}
 				</div>

@@ -17,8 +17,6 @@ const ChatList = ({
 	isValidating,
 	data,
 	activeUsers,
-	lastMessageChatList,
-	lastMessageCurrentUser,
 	filteredUsers,
 }) => {
 	const [lastMessage, setLastMessage] = useState([])
@@ -26,6 +24,11 @@ const ChatList = ({
 
 	const store = useStore()
 	const { mutate } = useSWRConfig()
+
+	const messageSocket = useStore((state) => state.messageSocket)
+	const messageSocketCurrentUser = useStore(
+		(state) => state.messageSocketCurrentUser
+	)
 
 	useEffect(() => {
 		if (localStorage['currChat']) {
@@ -40,37 +43,37 @@ const ChatList = ({
 		if (!isValidating) {
 			const isLastMessage = data?.some((user) => {
 				return (
-					(lastMessageCurrentUser?.senderId === currentUser &&
-						lastMessageCurrentUser?.receiverId === user.accountChatList) ||
-					(lastMessageCurrentUser?.receiverId === currentUser &&
-						lastMessageCurrentUser?.senderId === user.accountChatList)
+					(messageSocketCurrentUser?.senderId === currentUser &&
+						messageSocketCurrentUser?.receiverId === user.accountChatList) ||
+					(messageSocketCurrentUser?.receiverId === currentUser &&
+						messageSocketCurrentUser?.senderId === user.accountChatList)
 				)
 			})
 			if (isLastMessage) {
-				setLastMessage(lastMessageCurrentUser)
-				setLastTime(lastMessageCurrentUser)
+				setLastMessage(messageSocketCurrentUser)
+				setLastTime(messageSocketCurrentUser)
 			}
 			mutate(currentUser, true)
 		}
-	}, [lastMessageCurrentUser])
+	}, [messageSocketCurrentUser])
 
 	useEffect(() => {
 		if (!isValidating) {
 			const isLastMessage = data?.some((user) => {
 				return (
-					(lastMessageChatList?.senderId === currentUser &&
-						lastMessageChatList?.receiverId === user.accountChatList) ||
-					(lastMessageChatList?.receiverId === currentUser &&
-						lastMessageChatList?.senderId === user.accountChatList)
+					(messageSocket?.senderId === currentUser &&
+						messageSocket?.receiverId === user.accountChatList) ||
+					(messageSocket?.receiverId === currentUser &&
+						messageSocket?.senderId === user.accountChatList)
 				)
 			})
 			if (isLastMessage) {
-				setLastMessage(lastMessageChatList)
-				setLastTime(lastMessageChatList)
+				setLastMessage(messageSocket)
+				setLastTime(messageSocket)
 			}
 			mutate(currentUser, true)
 		}
-	}, [lastMessageChatList])
+	}, [messageSocket])
 
 	const updateCurrChat = (user) => {
 		if (user?.lastMessage?.[0]?.receiverId === currentUser) {
@@ -143,15 +146,15 @@ const ChatList = ({
 									)}
 								</p>
 								<p className="text-xs">
-									{(lastMessageChatList?.senderId === currentUser &&
-										lastMessageChatList?.receiverId === user.accountChatList) ||
-									(lastMessageChatList?.receiverId === currentUser &&
-										lastMessageChatList?.senderId === user.accountChatList) ||
-									(lastMessageCurrentUser?.senderId === currentUser &&
-										lastMessageCurrentUser?.receiverId ===
+									{(messageSocket?.senderId === currentUser &&
+										messageSocket?.receiverId === user.accountChatList) ||
+									(messageSocket?.receiverId === currentUser &&
+										messageSocket?.senderId === user.accountChatList) ||
+									(messageSocketCurrentUser?.senderId === currentUser &&
+										messageSocketCurrentUser?.receiverId ===
 											user.accountChatList) ||
-									(lastMessageCurrentUser?.receiverId === currentUser &&
-										lastMessageCurrentUser?.senderId === user.accountChatList)
+									(messageSocketCurrentUser?.receiverId === currentUser &&
+										messageSocketCurrentUser?.senderId === user.accountChatList)
 										? moment(lastTime?.createAt).startOf('minute').fromNow()
 										: moment(user?.lastMessage?.[0]?.createdAt)
 												.startOf('minute')
@@ -162,17 +165,15 @@ const ChatList = ({
 								<div>
 									{user.lastMessage[0] && user.lastMessage[0].message?.text ? (
 										<span>
-											{(lastMessageChatList?.senderId === currentUser &&
-												lastMessageChatList?.receiverId ===
+											{(messageSocket?.senderId === currentUser &&
+												messageSocket?.receiverId === user.accountChatList) ||
+											(messageSocket?.receiverId === currentUser &&
+												messageSocket?.senderId === user.accountChatList) ||
+											(messageSocketCurrentUser?.senderId === currentUser &&
+												messageSocketCurrentUser?.receiverId ===
 													user.accountChatList) ||
-											(lastMessageChatList?.receiverId === currentUser &&
-												lastMessageChatList?.senderId ===
-													user.accountChatList) ||
-											(lastMessageCurrentUser?.senderId === currentUser &&
-												lastMessageCurrentUser?.receiverId ===
-													user.accountChatList) ||
-											(lastMessageCurrentUser?.receiverId === currentUser &&
-												lastMessageCurrentUser?.senderId ===
+											(messageSocketCurrentUser?.receiverId === currentUser &&
+												messageSocketCurrentUser?.senderId ===
 													user.accountChatList)
 												? prettyTruncate(lastMessage?.message?.text, 30)
 												: prettyTruncate(user.lastMessage[0].message.text, 30)}
