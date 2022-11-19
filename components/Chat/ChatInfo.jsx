@@ -8,14 +8,18 @@ import {
 	Box,
 	useDisclosure,
 } from '@chakra-ui/react'
+import { Lightbox } from 'react-modal-image'
 
 import { prettyTruncate } from '../../utils/common'
 import { IconBlocked, IconLeft, IconTag } from '../Icon'
 import useStore from '../../lib/store'
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import SetNicknameModal from '../Modal/SetNicknameModal'
 
 const ChatInfo = ({ activeUsers }) => {
+	const [isOpenImage, setIsOpenImage] = useState(false)
+	const [imageUrl, setImageUrl] = useState('')
+
 	const currChat = useStore((state) => state.currentChat)
 	const messages = useStore((state) => state.messages)
 	const userProfile = useStore((state) => state.userProfile)
@@ -33,6 +37,11 @@ const ChatInfo = ({ activeUsers }) => {
 
 	if (!currChat) {
 		return null
+	}
+
+	const handleImageClick = (imgUrl) => {
+		setIsOpenImage(true)
+		setImageUrl(imgUrl)
 	}
 
 	return (
@@ -105,17 +114,16 @@ const ChatInfo = ({ activeUsers }) => {
 								messages?.map((msg, idx) => (
 									<Fragment key={idx}>
 										{msg.message.image && (
-											<a
-												href={`https://paras-cdn.imgix.net/${msg.message.image}?width=800`}
-												target="_blank"
-												rel="noreferrer"
-											>
-												<img
-													className="p-2 rounded-md cursor-pointer hover:bg-primary-light-grey-200 transition duration-200"
-													src={`https://paras-cdn.imgix.net/${msg.message.image}?width=800`}
-													width={100}
-												/>
-											</a>
+											<img
+												className="p-2 rounded-md cursor-pointer hover:bg-primary-light-grey-200 transition duration-200"
+												src={`https://paras-cdn.imgix.net/${msg.message.image}?width=800`}
+												width={100}
+												onClick={() =>
+													handleImageClick(
+														`https://paras-cdn.imgix.net/${msg.message.image}?width=800`
+													)
+												}
+											/>
 										)}
 									</Fragment>
 								))
@@ -156,6 +164,13 @@ const ChatInfo = ({ activeUsers }) => {
 				currentUser={userProfile.accountId}
 				accountUser={currChat}
 			/>
+			{isOpenImage && (
+				<Lightbox
+					medium={imageUrl}
+					large={imageUrl}
+					onClose={() => setIsOpenImage(false)}
+				/>
+			)}
 		</div>
 	)
 }

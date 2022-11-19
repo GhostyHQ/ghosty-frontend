@@ -13,6 +13,7 @@ import AddAddressModal from '../Modal/AddAddressModal'
 import { API_URL } from '../../constants/apiUrl'
 import near from '../../lib/near'
 import moment from 'moment'
+import { Lightbox } from 'react-modal-image'
 
 const MiddleSide = ({
 	socket,
@@ -31,6 +32,8 @@ const MiddleSide = ({
 	const [messages, setMessages] = useState([])
 	const [socketMessages, setSocketMessages] = useState('')
 	const [typingMessage, setTypingMessage] = useState('')
+	const [isOpenImage, setIsOpenImage] = useState(false)
+	const [imageUrl, setImageUrl] = useState('')
 
 	const store = useStore()
 
@@ -131,6 +134,11 @@ const MiddleSide = ({
 		} catch (error) {
 			console.log(error)
 		}
+	}
+
+	const handleImageClick = (imgUrl) => {
+		setIsOpenImage(true)
+		setImageUrl(imgUrl)
 	}
 
 	if (isLoading) {
@@ -298,23 +306,22 @@ const MiddleSide = ({
 														/>
 													</div>
 													<div className="p-3 rounded-xl bg-primary-light-grey bg-opacity-20">
-														<a
-															href={`https://paras-cdn.imgix.net/${message.message.image}?width=800`}
-															target="_blank"
-															rel="noreferrer"
-														>
-															<img
-																className="cursor-pointer"
-																src={`https://paras-cdn.imgix.net/${message.message.image}?width=800`}
-																width={400}
-															/>
-															<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
-																{message.message &&
-																	moment(message.createdAt)
-																		.startOf('minute')
-																		.fromNow()}
-															</p>
-														</a>
+														<img
+															className="cursor-pointer"
+															src={`https://paras-cdn.imgix.net/${message.message.image}?width=800`}
+															width={400}
+															onClick={() =>
+																handleImageClick(
+																	`https://paras-cdn.imgix.net/${message.message.image}?width=800`
+																)
+															}
+														/>
+														<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
+															{message.message &&
+																moment(message.createdAt)
+																	.startOf('minute')
+																	.fromNow()}
+														</p>
 													</div>
 												</div>
 											)}
@@ -349,23 +356,22 @@ const MiddleSide = ({
 													)}
 												>
 													<div className="p-3 rounded-xl bg-primary-blue bg-opacity-20">
-														<a
-															href={`https://paras-cdn.imgix.net/${message.message.image}?width=800`}
-															target="_blank"
-															rel="noreferrer"
-														>
-															<img
-																className="cursor-pointer"
-																src={`https://paras-cdn.imgix.net/${message.message.image}?width=800`}
-																width={400}
-															/>
-															<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
-																{message.message &&
-																	moment(message.createdAt)
-																		.startOf('minute')
-																		.fromNow()}
-															</p>
-														</a>
+														<img
+															className="cursor-pointer"
+															src={`https://paras-cdn.imgix.net/${message.message.image}?width=800`}
+															width={400}
+															onClick={() =>
+																handleImageClick(
+																	`https://paras-cdn.imgix.net/${message.message.image}?width=800`
+																)
+															}
+														/>
+														<p className="mt-1 pl-14 text-right text-xs text-primary-dark-grey text-opacity-80">
+															{message.message &&
+																moment(message.createdAt)
+																	.startOf('minute')
+																	.fromNow()}
+														</p>
 													</div>
 												</div>
 											)}
@@ -418,12 +424,14 @@ const MiddleSide = ({
 						messages={messages}
 						currentUser={currentUser}
 					/>
-					{/* <AddAddressModal
-						isOpen={isOpen}
-						onClose={onClose}
-						currentUser={currentUser}
-					/> */}
 				</>
+			)}
+			{isOpenImage && (
+				<Lightbox
+					medium={imageUrl}
+					large={imageUrl}
+					onClose={() => setIsOpenImage(false)}
+				/>
 			)}
 		</div>
 	)
