@@ -6,18 +6,23 @@ import {
 	AccordionItem,
 	AccordionPanel,
 	Box,
+	useDisclosure,
 } from '@chakra-ui/react'
 
 import { prettyTruncate } from '../../utils/common'
 import { IconBlocked, IconLeft, IconTag } from '../Icon'
 import useStore from '../../lib/store'
 import { Fragment } from 'react'
+import SetNicknameModal from '../Modal/SetNicknameModal'
 
 const ChatInfo = ({ activeUsers }) => {
 	const currChat = useStore((state) => state.currentChat)
 	const messages = useStore((state) => state.messages)
 	const userProfile = useStore((state) => state.userProfile)
 	const setIsChatInfoMobile = useStore((state) => state.setIsChatInfoMobile)
+	const alias = useStore((state) => state.alias)
+
+	const { isOpen, onOpen, onClose } = useDisclosure()
 
 	const hasMedia = messages?.some(
 		(msg) =>
@@ -48,7 +53,13 @@ const ChatInfo = ({ activeUsers }) => {
 					target="_blank"
 					rel="noreferrer"
 				>
-					{prettyTruncate(currChat.accountChatList, 24, 'address')}
+					{prettyTruncate(
+						alias.accountId === currChat.accountChatList
+							? alias.alias
+							: currChat.alias || currChat.accountChatList,
+						24,
+						'address'
+					)}
 				</a>
 			</p>
 			{activeUsers?.some((u) => u.currentUser === currChat.accountChatList) && (
@@ -65,7 +76,10 @@ const ChatInfo = ({ activeUsers }) => {
 						</AccordionButton>
 					</h2>
 					<AccordionPanel pb={4}>
-						<div className="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-primary-light-grey-200 transition duration-200">
+						<div
+							className="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-primary-light-grey-200 transition duration-200"
+							onClick={onOpen}
+						>
 							<IconTag size={18} />
 							<p>Set Nickname</p>
 						</div>
@@ -132,6 +146,12 @@ const ChatInfo = ({ activeUsers }) => {
 					</AccordionPanel>
 				</AccordionItem>
 			</Accordion>
+			<SetNicknameModal
+				isOpen={isOpen}
+				onClose={onClose}
+				currentUser={userProfile.accountId}
+				accountUser={currChat}
+			/>
 		</div>
 	)
 }

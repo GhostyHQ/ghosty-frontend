@@ -132,7 +132,11 @@ const ChatList = ({
 						<div className="text-sm w-full">
 							<div className="flex justify-between items-center gap-2 whitespace-nowrap">
 								<p className="text-base font-semibold">
-									{prettyTruncate(user.accountChatList, 12, 'address')}
+									{prettyTruncate(
+										user.alias || user.accountChatList,
+										20,
+										'address'
+									)}
 								</p>
 								<p className="text-xs">
 									{(lastMessageChatList?.senderId === currentUser &&
@@ -166,8 +170,8 @@ const ChatList = ({
 											(lastMessageCurrentUser?.receiverId === currentUser &&
 												lastMessageCurrentUser?.senderId ===
 													user.accountChatList)
-												? prettyTruncate(lastMessage?.message?.text, 22)
-												: prettyTruncate(user.lastMessage[0].message.text, 22)}
+												? prettyTruncate(lastMessage?.message?.text, 30)
+												: prettyTruncate(user.lastMessage[0].message.text, 30)}
 										</span>
 									) : user.lastMessage[0] &&
 									  user.lastMessage[0].message?.image ? (

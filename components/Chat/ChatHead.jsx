@@ -7,6 +7,7 @@ import { IconEllipsis, IconLeft } from '../Icon'
 const ChatHead = ({ activeUsers, setToggleUserInfo }) => {
 	const store = useStore()
 	const currChat = useStore((state) => state.currentChat)
+	const alias = useStore((state) => state.alias)
 
 	return (
 		<div className="absolute inset-x-0 flex justify-between items-center p-4 bg-white border-b-[1px]">
@@ -25,7 +26,13 @@ const ChatHead = ({ activeUsers, setToggleUserInfo }) => {
 				/>
 				<div>
 					<p className="font-semibold">
-						{prettyTruncate(currChat.accountChatList, 30, 'address')}
+						{prettyTruncate(
+							alias.accountId === currChat.accountChatList
+								? alias.alias
+								: currChat.alias || currChat.accountChatList,
+							30,
+							'address'
+						)}
 					</p>
 					{activeUsers.some(
 						(u) => u.currentUser === currChat.accountChatList
