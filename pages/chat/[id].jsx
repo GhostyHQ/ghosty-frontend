@@ -27,7 +27,7 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 	const setDeliveredSocket = useStore((state) => state.setDeliveredSocket)
 	const setSeenSocket = useStore((state) => state.setSeenSocket)
 
-	const socket = io('http://localhost:8000')
+	const socket = io('https://socket.herokuapp.com', { withCredentials: true })
 
 	useEffect(() => {
 		socket.emit('addUser', currentUser, userProfile)
