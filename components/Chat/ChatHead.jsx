@@ -34,7 +34,7 @@ const ChatHead = ({ activeUsers, setToggleUserInfo }) => {
 							'address'
 						)}
 					</p>
-					{activeUsers.some(
+					{activeUsers?.some(
 						(u) => u.currentUser === currChat.accountChatList
 					) && <p className="text-xs text-green-500">Online</p>}
 				</div>
