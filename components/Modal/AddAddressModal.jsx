@@ -42,7 +42,9 @@ const AddAddressModal = ({ isOpen, onClose, currentUser }) => {
 		setIsLoading(true)
 
 		try {
-			const nearConfig = getConfig(process.env.APP_ENV || 'development')
+			const nearConfig = getConfig(
+				process.env.NEXT_PUBLIC_APP_ENV || 'development'
+			)
 			const res = await axios.post(nearConfig.nodeUrl, {
 				jsonrpc: '2.0',
 				id: 'dontcare',

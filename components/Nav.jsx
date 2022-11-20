@@ -13,7 +13,7 @@ const Nav = () => {
 		const appTitle = `Ghosty — A messaging platform for NEAR users to simply and instantly
 		messaging across wallet-to-wallet on the NEAR network.`
 		near.wallet.requestSignIn(
-			process.env.CONTRACT_NAME,
+			process.env.NEXT_PUBLIC_CONTRACT_NAME,
 			appTitle,
 			`${location.protocol}//${location.host}/loading`,
 			`${location.protocol}//${location.host}`

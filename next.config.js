@@ -2,10 +2,10 @@
 const nextConfig = {
 	reactStrictMode: false,
 	env: {
-		APP_ENV: process.env.APP_ENV,
-		BASE_URL: process.env.BASE_URL,
-		API_URL: process.env.API_URL,
-		CONTRACT_NAME: process.env.CONTRACT_NAME,
+		NEXT_PUBLIC_APP_ENV: process.env.NEXT_PUBLIC_APP_ENV,
+		NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+		NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+		NEXT_PUBLIC_CONTRACT_NAME: process.env.NEXT_PUBLIC_CONTRACT_NAME,
 	},
 }
 

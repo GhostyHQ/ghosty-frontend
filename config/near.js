@@ -1,4 +1,4 @@
-const CONTRACT_NAME = process.env.CONTRACT_NAME
+const CONTRACT_NAME = process.env.NEXT_PUBLIC_CONTRACT_NAME
 
 function getConfig(env) {
 	switch (env) {
