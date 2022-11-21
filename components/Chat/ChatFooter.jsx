@@ -184,7 +184,7 @@ const ChatFooter = ({ socket, initEmoji, fetchingMessages, currentUser }) => {
 	}
 
 	return (
-		<div className="absolute inset-x-0 bottom-0 bg-white z-50 pt-4 mx-4">
+		<div className="absolute inset-x-0 bottom-20 md:bottom-0 bg-white z-50 pt-4">
 			<div className="flex items-center gap-1 mb-4">
 				<label
 					htmlFor="pic"

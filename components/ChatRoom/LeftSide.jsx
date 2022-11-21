@@ -154,7 +154,7 @@ const LeftSide = ({
 						<div className="text-center mx-4">
 							<img
 								className="mx-auto"
-								src="/assets/icon-person.png"
+								src={`https://paras-cdn.imgix.net/bafkreibej3q4dp2tirfiuqkxnm6jeaxarezylfiijzaqsygmbflwvppqhm`}
 								width={150}
 							/>
 							<p className="text-xl font-semibold">Your chat is empty!</p>

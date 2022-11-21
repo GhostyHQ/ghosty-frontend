@@ -45,14 +45,14 @@ const ChatInfo = ({ activeUsers }) => {
 	}
 
 	return (
-		<div className="lg:col-span-2 xl:col-span-2">
+		<div className="mt-24 md:mt-0 lg:col-span-2 xl:col-span-2">
 			<div
-				className="block lg:hidden m-4 cursor-pointer"
+				className="lg:hidden m-4 cursor-pointer"
 				onClick={() => setIsChatInfoMobile(false)}
 			>
 				<IconLeft size={20} />
 			</div>
-			<div className="mt-10 flex justify-center">
+			<div className="mt-4 md:mt-10 flex justify-center">
 				<img
 					className="w-24 rounded-full"
 					src={`data:image/svg+xml;utf8,${generateFromString(
