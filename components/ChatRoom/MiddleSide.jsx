@@ -239,7 +239,7 @@ const MiddleSide = ({
 							setToggleUserInfo(!toggleUserInfo)
 						}}
 					/>
-					<div className="overflow-y-scroll h-[100vh] pt-20">
+					<div className="overflow-y-scroll h-[100vh] pt-20 mb-20 md:mb-0">
 						{messages.length !== 0 ? (
 							messages.map((message, idx) => (
 								<div ref={scrollRef} key={idx}>
