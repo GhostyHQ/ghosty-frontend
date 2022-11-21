@@ -27,6 +27,7 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 	const setDeliveredSocket = useStore((state) => state.setDeliveredSocket)
 	const setSeenSocket = useStore((state) => state.setSeenSocket)
 
+	// connect socket
 	const socket = io('https://ghost.cindaku.com', { transports: ['websocket'] })
 
 	useEffect(() => {
