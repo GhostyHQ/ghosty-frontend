@@ -239,7 +239,7 @@ const MiddleSide = ({
 							setToggleUserInfo(!toggleUserInfo)
 						}}
 					/>
-					<div className="overflow-y-scroll h-[100vh] pt-20 mb-20 md:mb-0">
+					<div className="overflow-y-scroll h-[100vh] pt-20">
 						{messages.length !== 0 ? (
 							messages.map((message, idx) => (
 								<div ref={scrollRef} key={idx}>
@@ -250,7 +250,7 @@ const MiddleSide = ({
 												<div
 													className={clsx(
 														'grid grid-flow-col justify-start gap-2 mt-4 ml-4 mr-80',
-														messages.length - 1 === idx && 'pb-24'
+														messages.length - 1 === idx && 'pb-40 d:pb-24'
 													)}
 												>
 													<div className="flex flex-col justify-end w-6 h-6">
@@ -278,7 +278,7 @@ const MiddleSide = ({
 												<div
 													className={clsx(
 														'grid grid-flow-col justify-start gap-2 mt-4 ml-4 mr-80',
-														messages.length - 1 === idx && 'pb-24'
+														messages.length - 1 === idx && 'pb-40 md:pb-24'
 													)}
 												>
 													<div className="flex flex-col justify-end w-6 h-6">
@@ -318,7 +318,7 @@ const MiddleSide = ({
 												<div
 													className={clsx(
 														'grid grid-flow-col justify-end gap-2 mt-4 mr-4',
-														messages.length - 1 === idx && 'pb-24'
+														messages.length - 1 === idx && 'pb-40 md:pb-24'
 													)}
 												>
 													<div className="p-3 rounded-xl bg-primary-blue bg-opacity-20">
@@ -337,7 +337,7 @@ const MiddleSide = ({
 												<div
 													className={clsx(
 														'grid grid-flow-col justify-end gap-2 mt-4 ml-80 mr-4',
-														messages.length - 1 === idx && 'pb-24'
+														messages.length - 1 === idx && 'pb-40 md:pb-24'
 													)}
 												>
 													<div className="p-3 rounded-xl bg-primary-blue bg-opacity-20">
