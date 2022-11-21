@@ -55,7 +55,10 @@ const Faq = () => {
 							<hr className="my-8" />
 							<div>
 								<p className="text-xl font-semibold">
-									Is all message on Ghosty end-to-end encrypted?
+									Is all message on Ghosty end-to-end encrypted?{' '}
+									<span className="border-2 border-primary-black rounded-md text-[10px] text-semibold px-1 py-1 ml-1">
+										Upcoming
+									</span>
 								</p>
 								<p className="text-[15px] mt-2 text-justify">
 									All messages are encrypted once both addresses are entered
@@ -79,7 +82,10 @@ const Faq = () => {
 							<hr className="my-8" />
 							<div>
 								<p className="text-xl font-semibold">
-									I get too much spam. How can I avoid them?
+									I get too much spam. How can I avoid them?{' '}
+									<span className="border-2 border-primary-black rounded-md text-[10px] text-semibold px-1 py-1 ml-1">
+										Upcoming
+									</span>
 								</p>
 								<p className="text-[15px] mt-2 text-justify">
 									You can block individual users whose messages you {`don't`}{' '}

@@ -23,21 +23,36 @@ const Feature = () => {
 				</div>
 				<div className="p-8 mb-6 border-2 border-primary-light-grey border-opacity-50 rounded-xl">
 					<IconLocked size={32} />
-					<p className="mt-4 font-bold">End-to-end Encryption</p>
+					<p className="mt-4 font-bold">
+						End-to-end Encryption{' '}
+						<span className="border-2 border-primary-black rounded-md text-[10px] text-semibold px-1 py-0.5 ml-1">
+							Upcoming
+						</span>
+					</p>
 					<p className="mt-1 text-justify">
 						Chat messages between signed-in addresses are encrypted by default.
 					</p>
 				</div>
 				<div className="p-8 mb-6 border-2 border-primary-light-grey border-opacity-50 rounded-xl">
 					<IconBlocked size={32} />
-					<p className="mt-4 font-bold">Block Addresses</p>
+					<p className="mt-4 font-bold">
+						Block Addresses{' '}
+						<span className="border-2 border-primary-black rounded-md text-[10px] text-semibold px-1 py-0.5 ml-1">
+							Upcoming
+						</span>
+					</p>
 					<p className="mt-1 text-justify">
 						Getting spam by address? Block the owner from sending you messages.
 					</p>
 				</div>
 				<div className="p-8 mb-6 border-2 border-primary-light-grey border-opacity-50 rounded-xl">
 					<IconBell size={32} />
-					<p className="mt-4 font-bold">Notifications</p>
+					<p className="mt-4 font-bold">
+						Notifications{' '}
+						<span className="border-2 border-primary-black rounded-md text-[10px] text-semibold px-1 py-0.5 ml-1">
+							Upcoming
+						</span>
+					</p>
 					<p className="mt-1 text-justify">
 						Receive notifications in your browser, or email.
 					</p>
@@ -52,7 +67,13 @@ const Feature = () => {
 				</div>
 				<div className="p-8 mb-6 border-2 border-primary-light-grey border-opacity-50 rounded-xl">
 					<IconMoon size={32} />
-					<p className="mt-4 font-bold">Dark Mode</p>
+					<p className="mt-4 font-bold">
+						Dark Mode{' '}
+						<span className="border-2 border-primary-black rounded-md text-[10px] text-semibold px-1 py-0.5 ml-1">
+							Upcoming
+						</span>
+					</p>
+
 					<p className="mt-1 text-justify">
 						Treat your eyes with the dark mode feature.
 					</p>

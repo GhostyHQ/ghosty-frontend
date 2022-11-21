@@ -34,7 +34,11 @@ const Footer = () => {
 							</span>
 						</a>
 						<span className="mx-2">|</span>{' '}
-						<a href="https://near.org" target="_blank" rel="noreferrer">
+						<a
+							href="https://twitter.com/ghostychat"
+							target="_blank"
+							rel="noreferrer"
+						>
 							<span className="underline underline-offset-2 cursor-pointer hover:text-primary-blue transition duration-300">
 								Twitter
 							</span>
