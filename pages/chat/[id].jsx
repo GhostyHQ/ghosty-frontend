@@ -27,9 +27,7 @@ const Chat = ({ initEmoji, userProfile, currentUser }) => {
 	const setDeliveredSocket = useStore((state) => state.setDeliveredSocket)
 	const setSeenSocket = useStore((state) => state.setSeenSocket)
 
-	const socket = io(progress.env.NEXT_PUBLIC_SOCKET_URL, {
-		transports: ['websocket'],
-	})
+	const socket = io('ws://34.143.140.28:8000', { transports: ['websocket'] })
 
 	useEffect(() => {
 		socket.emit('addUser', currentUser, userProfile)
