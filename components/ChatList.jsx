@@ -5,6 +5,7 @@ import { generateFromString } from 'generate-avatar'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { useSWRConfig } from 'swr'
+
 import { API_URL } from '../constants/apiUrl'
 import near from '../lib/near'
 import useStore from '../lib/store'
